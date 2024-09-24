@@ -1,0 +1,115 @@
+:root {
+    --primary-color: #6c63ff; /* Calming blue-purple */
+    --background-color: #f5f6fa; /* Light background */
+    --secondary-color: #ffffff; /* Card color */
+    --text-color: #333; /* Dark text */
+    --button-color: #ff6b6b; /* Vibrant button color */
+    --button-hover-color: #e05a5a; /* Button hover effect */
+    --input-border-color: #ddd; /* Light input border */
+    --shadow-color: rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    --font-family: 'Poppins', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-height: 80vh;
+    padding: 2%;
+}
+
+.card {
+    background-color: var(--secondary-color);
+    padding: 2%;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0px 8px 16px var(--shadow-color);
+    text-align: center;
+}
+
+h2.title {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.imageUpload {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.fileLabel {
+    display: block;
+    background-color: var(--background-color);
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px dashed var(--primary-color);
+    transition: background-color 0.3s ease;
+    overflow: hidden;
+}
+
+.fileLabel:hover {
+    background-color: #e8e8fe;
+}
+
+.fileInput {
+    display: none;
+}
+
+.imagePreview {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.inputField,
+.textArea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--input-border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.inputField:focus,
+.textArea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.textArea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.submitButton {
+    background-color: var(--button-color);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+    background-color: var(--button-hover-color);
+}

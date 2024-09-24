@@ -1,0 +1,153 @@
+.MyBlogContainer {
+    width: 100vw;
+    min-height: 60vh;
+    padding: 2%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
+
+}
+
+.myBlog {
+    width: 90%;
+    height: 90%;
+    border: 2px solid black;
+    padding: 1%;
+    margin: 2%;
+    display: flex;
+
+
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.1px);
+    -webkit-backdrop-filter: blur(4.1px);
+    border: 1px solid rgba(255, 255, 255, 0.58);
+}
+
+.myBlogContent {
+    width: 90%;
+    height: 100%;
+    /* border: 2px solid black; */
+    display: flex;
+}
+
+.myImage {
+    width: 30%;
+    height: 80%;
+}
+
+.detail {
+    width: 70%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.1px);
+    -webkit-backdrop-filter: blur(4.1px);
+    border: 1px solid rgba(255, 255, 255, 0.58);
+
+}
+
+.title,
+.short_headline {
+    width: 100%;
+    height: auto;
+    padding: 1%;
+    font-size: 2em;
+}
+
+.button {
+    width: 20%;
+    /* height: 60%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0px;
+}
+
+.edit,
+.delete,
+.view {
+    width: 60%;
+    height: 50%;
+    font-size: 20px;
+    margin: 1% 0;
+}
+
+
+@media (max-width : 1800px) {
+    .MyBlogContainer {
+        display: block;
+    }
+
+    .myBlog {
+        flex-wrap: wrap;
+    }
+
+    .myBlogContent {
+        height: auto;
+    }
+
+    .detail {
+        font-size: 16px;
+    }
+
+    .title,
+    .short_headline {
+        width: 100%;
+        height: auto;
+        padding: 1%;
+        font-size: 2em;
+        font-weight: 400;
+    }
+
+    .button {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        /* height: 50%; */
+        justify-content: space-around;
+        margin: 2% 0;
+    }
+
+    .edit,
+    .delete,
+    .view {
+        width: 30%;
+        height: 80%;
+        font-size: 20px;
+        margin: 1% 0;
+    }
+}
+
+@media (max-width : 1800px) {
+
+    .myBlog {
+        flex-wrap: wrap;
+        height: auto;
+    }
+}
+@media(max-width : 700px){
+    .myBlog{
+        height: auto;
+    }
+    .myBlogContent{
+        width: 100%;
+        flex-direction: column;
+        height: auto;
+    }
+    .detail{
+        width: 100%;
+        height: auto;
+    }
+
+    .title , .short_headline{
+        min-height: 40%;
+    }
+    .button{
+        height: auto;
+    }
+}
