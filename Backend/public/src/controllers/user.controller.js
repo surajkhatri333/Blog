@@ -80,7 +80,9 @@ export const userLogin = asyncHandler(async (req, res) => {
             //set cookies
             res.cookie("token",token,{
                 httpOnly : true,
-                maxAge : 3600000
+                maxAge : 3600000,
+                secure:true,
+                samesite : "strict"
             })
 
             console.log("user login successfully");
