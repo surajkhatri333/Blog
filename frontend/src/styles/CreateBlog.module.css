@@ -1,12 +1,14 @@
 :root {
     --primary-color: #6c63ff; /* Calming blue-purple */
-    --background-color: #f5f6fa; /* Light background */
+    --background-color:  #F5F5DC; 
     --secondary-color: #ffffff; /* Card color */
     --text-color: #333; /* Dark text */
     --button-color: #ff6b6b; /* Vibrant button color */
     --button-hover-color: #e05a5a; /* Button hover effect */
     --input-border-color: #ddd; /* Light input border */
     --shadow-color: rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    --input-box-color : #E0F7FA;
+    --primary-action:#2980B9;
     --font-family: 'Poppins', sans-serif;
 }
 
@@ -25,6 +27,7 @@
     width: 100vw;
     min-height: 80vh;
     padding: 2%;
+    background-color: var(--background-color);
 }
 
 .card {
@@ -93,14 +96,16 @@ h2.title {
     border-color: var(--primary-color);
     outline: none;
 }
-
+input{
+    background-color: var(--input-box-color);
+}
 .textArea {
     min-height: 150px;
     resize: vertical;
 }
 
 .submitButton {
-    background-color: var(--button-color);
+    background-color: var(--primary-action);
     color: white;
     padding: 15px 30px;
     border: none;

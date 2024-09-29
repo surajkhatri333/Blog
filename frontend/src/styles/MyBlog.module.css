@@ -75,7 +75,9 @@
     height: 50%;
     font-size: 20px;
     margin: 1% 0;
+    color:blue ;
 }
+
 
 
 @media (max-width : 1800px) {

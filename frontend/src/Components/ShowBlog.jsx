@@ -1,18 +1,12 @@
 import { useParams } from 'react-router-dom';
 import styles from '../styles/ShowBlog.module.css'
-// import blogsPost from './blogPost.js'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 export const ShowBlog = () => {
     const [data, setData] = useState([]);
     const [isEditing, setisEditing] = useState(false);
     const { id } = useParams();
-    // let blog = blogsPost.find((blogs) => blogs.id.toString() === id);
-    // if(!blog){
-    //     console.log("blog not found");
-    // }
-
-
+    
     //fetch data from bakcend
 
     useEffect(() => {

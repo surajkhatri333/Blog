@@ -1,4 +1,3 @@
-
 import  styles from '../styles/Footer.module.css'; // Import CSS for footer styling
 
 const Footer = () => {

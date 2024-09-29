@@ -13,7 +13,7 @@ export const Login = ({onLogin}) => {
   const handleLogin = async (e) => {
     e.preventDefault();  // Prevent default form submit behavior
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/user/login", { email, password });
+      const response = await axios.post("http://localhost:8080/api/v1/user/login", { email, password },{withCredentials:true});
       console.log(response.data.message);
       onLogin(email);
       navigate("/");

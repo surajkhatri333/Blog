@@ -3,12 +3,10 @@ import axios from 'axios'
 import style from '../styles/MyBlog.module.css'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { useAuth0 } from '@auth0/auth0-react'
 import propTypes from 'prop-types'
 
 
 export const MyBlogs = ({userEmail}) => {
-    const { user, isAuthenticated } = useAuth0();
     const [data, setdata] = useState([]);
     console.log(userEmail)
 
@@ -26,8 +24,7 @@ export const MyBlogs = ({userEmail}) => {
         };
         fetchdata();
 
-    }, [isAuthenticated, user])
-
+    }, [userEmail])
 
 
 

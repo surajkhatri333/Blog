@@ -7,10 +7,11 @@ import bodyParser from 'body-parser'
 import { User } from './public/src/models/user.model.js'
 import { upload } from './public/src/middleware/multer.middleware.js'
 
+
 const app = express();
 
 app.use(cors({
-    origin: '*',
+    origin: 'http://localhost:5173',
     credentials: true
 }));
 

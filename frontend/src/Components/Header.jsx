@@ -1,43 +1,12 @@
-// import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from 'react-router-dom';
 import styles from '../styles/Header.module.css'
 import { useState } from "react";
 import propTypes from 'prop-types'
 
-// import axios from 'axios'
 
 const Header = ( { isLogin ,onLogout ,userEmail} ) => {
-    // const { logout, isAuthenticated, loginWithRedirect, user } = useAuth0();
-    // console.log(user)
     const [tab, settab] = useState(false);
     console.log(isLogin,onLogout,userEmail)
-
-    // connect user register with backend
-
-    // useEffect(() => {
-    //     if (isAuthenticated) {
-    //         sendUserToBackend()
-    //     }
-    // }, [isAuthenticated, user]);
-
-
-   
-
-    // const sendUserToBackend = async () => {
-
-    //     try {
-    //         const response = await axios.post("http://localhost:8080/api/users", {
-    //             username: user.name,
-    //             email: user.email,
-    //         });
-
-    //         console.log("User data send to backend", response.data);
-    //     }
-    //     catch (err) {
-    //         console.log("error in sending user to backend", err);
-    //     }
-    // }
-
 
     const showTab = () => {
         settab(prev => {
@@ -52,7 +21,6 @@ const Header = ( { isLogin ,onLogout ,userEmail} ) => {
         })
 
     };
-    // console.log(isAuthenticated);
     return (
         <>
             <div className={styles.header}>
@@ -64,12 +32,6 @@ const Header = ( { isLogin ,onLogout ,userEmail} ) => {
                     <div className={styles.tab} id="tabs4">CONTACT</div>
                 </div>
                 <div className={styles.account}>
-
-                    {/* {
-                        isAuthenticated ?
-                            (<button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>Logout</button>)
-                            : (<button onClick={() => loginWithRedirect()}>log In</button>)
-                    } */}
 
                     {
                         isLogin ?

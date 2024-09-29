@@ -1,4 +1,4 @@
-// import blogPost from './blogPost.js'
+
 import styles from '../styles/Blogs.module.css'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -45,7 +45,7 @@ const Blogs = () => {
                                         <h5 className={styles['card-title']}>{blog.title}</h5>
                                         <p className={styles['card-text']}>{blog.short_headline}</p>
 
-                                        <Link to={`/show/${blog._id}`} >View Blog</Link> 
+                                        <Link to={`/show/${blog._id}`} style={{color:"#E67E22"}} >View Blog</Link> 
 
                                     </div>
                                 </div>
