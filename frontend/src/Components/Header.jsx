@@ -47,7 +47,7 @@ const Header = ( { isLogin ,onLogout ,userEmail} ) => {
                     <div className={styles.tab} id="tabs1"><Link to="/">HOME</Link></div>
                     <div className={styles.tab} id="tabs2"><Link to="/create">CREATE BLOG</Link></div>
                     <div className={styles.tab} id="tabs3"><Link to={`/Myblogs/${userEmail}`} >MY BLOGS</Link></div>
-                    <div className={styles.tab} id="tabs4">CONTACT</div>
+                    <div className={styles.tab} id="tabs4"><Link to ={"/Dashboard"}>Dashboard</Link></div>
                 </div>
                 <div className={styles.account}>
 

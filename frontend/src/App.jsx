@@ -10,6 +10,8 @@ import {MyBlogs} from './Components/MyBlog.jsx'
 import { Login } from './Components/Login.jsx'
 import { Signup } from './Components/Signup.jsx'
 import {  useState } from 'react'
+import Dashboard from './Components/Dashboard.jsx';
+import './App.css';
 
 
 function App() {
@@ -34,6 +36,7 @@ function App() {
 
       <BrowserRouter>
         <Header isLogin={isLogin} handleLogin ={handleLogin} onLogout={handleLogout} userEmail={email} />
+        
         <Routes>
           <Route path="/" element={
             <>
@@ -48,6 +51,7 @@ function App() {
           <Route path="/MyBlogs/:email" element={<MyBlogs  userEmail={email} />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/sign up" element={<Signup />} />
+          <Route path="/Dashboard" element={<Dashboard/>} />
           
         </Routes>
        
