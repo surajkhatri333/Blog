@@ -9,13 +9,15 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import {MyBlogs} from './Components/MyBlog.jsx'
 import { Login } from './Components/Login.jsx'
 import { Signup } from './Components/Signup.jsx'
-import { useState } from 'react'
-// import { useAuth0 } from '@auth0/auth0-react'
+import {  useState } from 'react'
 
 
 function App() {
   const [isLogin , setisLogin] = useState(false);
   const [email , setuserEmail] = useState('');
+
+
+ 
 
   const handleLogin = (userEmail)=>{
     setisLogin(true);
@@ -31,7 +33,7 @@ function App() {
     <>
 
       <BrowserRouter>
-        <Header isLogin={isLogin} onLogout={handleLogout} userEmail={email} />
+        <Header isLogin={isLogin} handleLogin ={handleLogin} onLogout={handleLogout} userEmail={email} />
         <Routes>
           <Route path="/" element={
             <>
@@ -41,7 +43,7 @@ function App() {
             </>
 
           } />
-          <Route path="/create" element={<CreateBlog />} />
+          <Route path="/create" element={<CreateBlog userEmail = {email}/>} />
           <Route path="/show/:id" element={<ShowBlog />} />
           <Route path="/MyBlogs/:email" element={<MyBlogs  userEmail={email} />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />

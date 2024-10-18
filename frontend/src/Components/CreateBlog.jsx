@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import styles from '../styles/CreateBlog.module.css';
-import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
+import propTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
-const CreateBlog = () => {
-    const { user } = useAuth0();
+// eslint-disable-next-line react/prop-types
+ const CreateBlog = ({userEmail}) => {
+    const  Navigate = useNavigate();
     const [field, setfield] = useState({
         title: '',
         description: '',
@@ -23,17 +25,20 @@ const CreateBlog = () => {
     const sendBlogToBackend = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append('owner', user.email);
+        // formData.append('owner', userEmail);
         formData.append('image', document.querySelector('input[name="image"]').files[0]);
         formData.append('title', field.title);
         formData.append('short_headline', field.shortDes);
         formData.append('description', field.description);
 
         try {
-            const response = await axios.post(`http://localhost:8080/api/users/${user.email}`, formData);
+            const response = await axios.post(`http://localhost:8080/api/users/${userEmail}`, formData);
             console.log('Blog data sent to backend', response);
+            console.log(`http://localhost:8080/api/users/${userEmail}`)
+            Navigate("/")
         } catch (err) {
             console.log('Cannot send blog data to backend', err);
+            console.log(`http://localhost:8080/api/users/${userEmail}`)
         }
     };
 
@@ -90,5 +95,10 @@ const CreateBlog = () => {
     );
 };
 
+
 export default CreateBlog;
+
+CreateBlog.propTypes = {
+    userEmail : propTypes.string.isRequired
+}
 

@@ -1,12 +1,30 @@
 import { Link } from 'react-router-dom';
 import styles from '../styles/Header.module.css'
-import { useState } from "react";
+import {  useState } from "react";
 import propTypes from 'prop-types'
+// import axios from 'axios';
 
 
 const Header = ( { isLogin ,onLogout ,userEmail} ) => {
     const [tab, settab] = useState(false);
     console.log(isLogin,onLogout,userEmail)
+
+    // useEffect(()=>{
+    //     axios.get("http://localhost:8080/check",{withCredentials:true})
+    //      .then((res)=>{
+    //       try {
+    //         if(res.data.isLogin){
+    //           handleLogin(res.data.userEmail);
+    //         }
+    //         else{
+    //            handleLogin(null);
+    //         }
+    //       } catch (err) {
+    //         handleLogin(null);
+    //       }
+    //      })
+    //   });
+      
 
     const showTab = () => {
         settab(prev => {
@@ -67,7 +85,8 @@ const Header = ( { isLogin ,onLogout ,userEmail} ) => {
 Header.propTypes = {
     isLogin : propTypes.bool.isRequired,
     onLogout : propTypes.func.isRequired,
-    userEmail : propTypes.string.isRequired
+    userEmail : propTypes.string.isRequired,
+    handleLogin : propTypes.func.isRequired
 }
 
 export default Header

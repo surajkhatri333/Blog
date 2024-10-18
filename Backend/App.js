@@ -29,10 +29,16 @@ import { userRouter } from './public/src/routes/user.router.js'
 import { ApiError } from './public/src/utils/ApiError.js'
 import { Blog } from './public/src/models/blog.model.js'
 import { ApiResponse } from './public/src/utils/ApiResponse.js'
+import { verifyJwt } from './public/src/middleware/jwtVerify.middleware.js'
 
 
 
 app.use("/api/v1/user", userRouter);
+
+app.get("/check",verifyJwt,(req, res) => {
+    // This route will only be reached if the token is valid
+    res.status(200).json({ isLogin: true, userEmail: req.user.email }); // Send user details if needed
+});
 
 
 app.post('/api/users', async (req, res) => {
@@ -60,15 +66,17 @@ app.post('/api/users', async (req, res) => {
 
 
 app.post("/api/users/:owner", upload.single("image"), async (req, res) => {
-    const { owner, title, short_headline, description } = req.body;
+    const owner = req.params.owner;
+    const {  title, short_headline, description } = req.body;
     const { image } = req.file;
+    console.log(owner)
     console.log(req.body)
     console.log(req.file)
 
     try {
-        const user = await User.findOne({ email: owner });
+        const user = await User.findOne({email: owner});
         if (!user) {
-            return alert(res.status(400).json(new ApiError(400, "User is not register, Please sign up")));
+            return res.status(400).json(new ApiError(400, "User is not register, Please sign up"));
         }
         await Blog.create(
             {

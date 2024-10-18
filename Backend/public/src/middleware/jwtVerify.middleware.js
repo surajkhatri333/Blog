@@ -3,7 +3,7 @@ export const verifyJwt = (req,res,next)=>{
     const token = req.cookies.token;
 
     if(!token){
-        return res.status(400).json("unauthorized token not found");
+        return res.status(401).json({message :"unauthorized token not found"});
     }
 
     try {
@@ -11,7 +11,7 @@ export const verifyJwt = (req,res,next)=>{
         req.user = data;
         next();
     } catch (err){
-        return res.status(400).josn("Invalid token or expire token")
+        return res.status(401).josn({message :"Invalid token or expire token"})
     }
 
 }
