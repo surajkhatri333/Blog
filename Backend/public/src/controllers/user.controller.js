@@ -20,13 +20,12 @@ export const userRegister = asyncHandler(async (req, res) => {
     if (existedUser) {
         return res.status(400).json(new ApiError(400, " User already exit"));
     }
-
-
+    const hashedPassword = await bcrypt.hash(password, 8);
 
     const user = await User.create({
         username: name,
         email,
-        password: await bcrypt.hash("password", 8)
+        password: hashedPassword
     });
 
     const userCreated = await User.findOne({ email: user.email });
@@ -58,48 +57,44 @@ export const userLogin = asyncHandler(async (req, res) => {
         return res.status(400).json(new ApiError(400, "Invalid user"));
     }
 
-    bcrypt.compare("password", userExist.password)
-        .then((checkPassword) => {
-            if (!checkPassword) {
-                console.log("Invalid password");
-                return res.status(400).json(new ApiError(400, "Wrong password"));
-            }
+    const checkPassword =   bcrypt.compare(password, userExist.password);
+
+    if (!checkPassword) {
+        console.log("Invalid password");
+        return res.status(400).json(new ApiError(400, "Wrong password"));
+    }
 
 
-            console.log(`password is :`, checkPassword);
+    console.log(`password is :`, checkPassword);
 
-            //generate access token
-            const token = jwt.sign(
-                { id: userExist._id },
-                process.env.ACCESS_TOKEN_SECRET,
-                {
-                    expiresIn: "1h"
-                }
-            );
+    //generate access token
+    const token = jwt.sign(
+        { id: userExist._id },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: "1h"
+        }
+    );
 
-            //set cookies
-            res.cookie("token",token,{
-                httpOnly : true,
-                maxAge : 3600000,
-                secure: false,
-                samesite : "lax"
-            })
+    //set cookies
+    res.cookie("token", token, {
+        httpOnly: true,
+        maxAge: 3600000,
+        secure: false,
+        samesite: "lax"
+    })
 
-            console.log("user login successfully");
-            return res.status(200).json(new ApiResponse(200, "you are successfuly login"));
-        })
-        .catch(err => {
-            console.log(`Error comparing password :`, err)
-        })
+    console.log("user login successfully");
+    return res.status(200).json(new ApiResponse(200, "you are successfuly login"));
 
 
 });
 
-export const userLogout = asyncHandler(async (req,res)=>{
-    res.cookie("token","",{
-        httpOnly : true,
-        expires : new Date(0)
+export const userLogout = asyncHandler(async (req, res) => {
+    res.cookie("token", "", {
+        httpOnly: true,
+        expires: new Date(0)
     })
 
-    return res.status(200).json(new ApiResponse(200,"User successfully logout"))
+    return res.status(200).json(new ApiResponse(200, "User successfully logout"))
 })

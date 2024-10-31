@@ -1,101 +1,130 @@
 .showBlogContainer {
     width: 100vw;
     height: 100vh;
-    /* background-color: #AD49E1; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f9;
 }
 
 .blogContainer {
     width: 80%;
-    height: 100%;
-    /* border: 2px solid black; */
+    max-width: 1200px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
     flex-direction: row;
     margin: auto;
 }
 
-.blogContents {
-    /* border: 2px solid black; */
-    height: 100%;
-    /* background-color:  #7A1CAC; */
-
-}
-
 #blogContainer1 {
-    width: 30%;
+    flex: 1;
+    max-width: 25%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
 }
 
 #blogContainer2 {
-    width: 70%;
+    flex: 3;
+    width: auto;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+}
+
+.blogContents {
+    width: 100%;
+    padding: 1.5rem;
+    border: 2px solid #7A1CAC;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .image {
-    width: 80%;
-    height: 50%;
-    border: 2px solid red;
-    margin: auto;
-    box-sizing: border-box;
-    background-size: contain;
-    /* From https://css.glass */
-    background: rgba(255, 255, 255, 0.21);
-    /* background-color: #7a1cacd1; */
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(4.1px);
-    -webkit-backdrop-filter: blur(4.1px);
-    border: 1px solid rgba(255, 255, 255, 0.58);
-
+    width: 100%;
+    max-width: 400px;
+    max-height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .fields {
     width: 100%;
-    height: max-content;
-    padding: 1%;
-    /* border: 1px solid black; */
+    height: 30%;
     text-align: center;
-    font-size: 20px;
+    font-size: 15px;
 }
-h2{
-    font-size: 2em;
+
+h2 {
+    font-size: 1em;
+    margin: 0.5rem 0;
+    color: #333;
 }
-p{
-    font-size: 1.89em;
+
+p {
+    font-size: 1em;
+    color: #555;
 }
 
 .buttons {
-    width: 80%;
-    height: 20%;
-    margin: auto;
     display: flex;
     justify-content: space-between;
-    
+    gap: 0.4rem;
+    margin-top: 1rem;
+    font-size: 5px;
 }
 
 button {
-    width: 20%;
-    border-radius: 50px;
-    background-color: rgba(122, 122, 220, 0.696);
-
+    flex: 1;
+    max-height: 90px;
+    padding: 0.5rem 1rem;
+    font-size: 2em;
+    font-weight: bold;
+    color: #fff;
+    background-color: #ff6b6b;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.blogContents textarea{
-    width: 90%;
-    height: 90%;
-    padding: 2%;
-    text-align: justify;
-    font-size: 3em;
-    background: rgba(255, 255, 255, 0.274);
-    /* background-color: #7a1cacc9; */
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(4.1px);
-    -webkit-backdrop-filter: blur(4.1px);
-    border: 1px solid rgba(255, 255, 255, 0.58);
+button:hover {
+    background-color: #5a0e87;
 }
 
+/* Adjusted textarea styling */
+.blogContents textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 1rem;
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: #333;
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    resize: vertical;  /* Allows vertical resizing without scrollbars */
+    /* overflow-y: hidden; Hides scrollbar */
+    outline: none;
+}
+
+input{
+    font-size: 1.3em;
+}
+
+ i{
+    margin: auto;
+    display: flex;
+}

@@ -3,7 +3,7 @@
     height: auto;
     display: grid;
     grid-auto-rows: max-content;
-    grid-template-columns: 2fr 2fr 2fr 2fr;
+    grid-template-columns: 2fr 2fr 2fr 2fr 2fr 2fr;
     gap: 4%;
     /* justify-content: center; */
     box-sizing: border-box;
@@ -16,7 +16,7 @@
 }
 
 .card{
-    width: 60%;
+    width: 65%;
     height: auto;
     margin: auto;
     border: 1px solid wheat;
@@ -37,7 +37,7 @@ img{
     width:100%;
     height: auto;
     /* border: 2px solid black; */
-    font-size: 20px;
+    font-size: 15px;
     padding: 3%;
     background-color: rgba(232, 230, 226, 0.865);
 }
@@ -55,18 +55,10 @@ img{
     margin: 2%;
     padding: 2%;
 }
-button{
-    width: 10vw;
-    height: 10vh;
-    color: blue;
-    text-decoration-line: none;
-    background-color: #E67E22;
-}
-
-
 
 .moreBlog {
-    margin-top: 20px; /* Adjust the spacing as needed */
+
+    margin-bottom: 10px; /* Adjust the spacing as needed */
     display: flex;
     justify-content: center; /* Center the button horizontally */
     width: 100%; /* Ensure it spans the width of the container */
@@ -74,13 +66,14 @@ button{
 }
 
 .moreBlog button {
-    width: 40%;
+    width: 10vw;
+    height: 10vh;
+    color: blue;
+    text-decoration-line: none;
+    background-color: #E67E22;
     font-size: 1vw;
     padding: 10px 20px; /* Adjust the padding as needed */
 }
-
-
-
 
 @media (max-width : 800px){
     .blogContainer{
@@ -112,7 +105,7 @@ button{
 @media (min-width : 800px) and (max-width : 1200px){
     .blogContainer{
         grid-auto-rows: max-content;
-        grid-template-columns: 1fr  1fr;
+        grid-template-columns: 1fr  1fr 1fr;
         gap: 1% ;
     }
     .card{
@@ -142,7 +135,7 @@ button{
     .blogContainer{
         display: grid;
         grid-auto-rows: max-content;
-        grid-template-columns: 2fr 2fr  2fr;
+        grid-template-columns: 2fr 2fr  2fr 2fr;
         gap: 4%;
     }
     .card{

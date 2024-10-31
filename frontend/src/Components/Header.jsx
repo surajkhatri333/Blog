@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styles from '../styles/Header.module.css'
-import {  useState } from "react";
+import {  useState, } from "react";
 import propTypes from 'prop-types'
 // import axios from 'axios';
 
@@ -9,21 +9,25 @@ const Header = ( { isLogin ,onLogout ,userEmail} ) => {
     const [tab, settab] = useState(false);
     console.log(isLogin,onLogout,userEmail)
 
-    // useEffect(()=>{
-    //     axios.get("http://localhost:8080/check",{withCredentials:true})
-    //      .then((res)=>{
-    //       try {
-    //         if(res.data.isLogin){
-    //           handleLogin(res.data.userEmail);
-    //         }
-    //         else{
-    //            handleLogin(null);
-    //         }
-    //       } catch (err) {
-    //         handleLogin(null);
-    //       }
-    //      })
-    //   });
+    // useEffect(() => async ()=>{
+    //     // Check if token exists in cookies
+    //     const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+    //     if (token) {
+    //         // Token exists, make a request to verify it
+    //          await axios.get("http://localhost:8080/check", { withCredentials: true })
+    //             .then((res) => {
+    //                 if (res.data.isLogin) {
+    //                     isLogin(res.data.userEmail); // Assuming handleLogin sets the state
+    //                     // setisLogin(true);
+    //                     // setuserEmail(res.data.userEmail);
+    //                 }
+    //             })
+    //             .catch((err) => {
+    //                 console.error("Error verifying token", err);
+    //                 isLogin(null);
+    //             });
+    //     }
+    // }, [handleLogin]);
       
 
     const showTab = () => {
@@ -48,6 +52,7 @@ const Header = ( { isLogin ,onLogout ,userEmail} ) => {
                     <div className={styles.tab} id="tabs2"><Link to="/create">CREATE BLOG</Link></div>
                     <div className={styles.tab} id="tabs3"><Link to={`/Myblogs/${userEmail}`} >MY BLOGS</Link></div>
                     <div className={styles.tab} id="tabs4"><Link to ={"/Dashboard"}>Dashboard</Link></div>
+                    <div className={styles.tab} id="tabs5"><Link to ={"/Admin"}>ADMIN</Link></div>
                 </div>
                 <div className={styles.account}>
 
@@ -62,11 +67,11 @@ const Header = ( { isLogin ,onLogout ,userEmail} ) => {
                             </button>
                             )
                     }
-                    <div>
+                   
                         <button>
                             <Link to={"/sign up"}>Sign Up</Link>
                         </button>
-                    </div>
+                    
 
 
 

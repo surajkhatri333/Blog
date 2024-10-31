@@ -5,13 +5,13 @@ import propTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line react/prop-types
- const CreateBlog = ({userEmail}) => {
+ const CreateBlog = ({userEmail,login}) => {
     const  Navigate = useNavigate();
     const [field, setfield] = useState({
         title: '',
         description: '',
         image: '',
-        shortDes: ''
+        shortDes: '',
     });
 
     const handleChange = (e) => {
@@ -32,6 +32,7 @@ import { useNavigate } from 'react-router-dom';
         formData.append('description', field.description);
 
         try {
+            if(!login) window.alert("User is not login");
             const response = await axios.post(`http://localhost:8080/api/users/${userEmail}`, formData);
             console.log('Blog data sent to backend', response);
             console.log(`http://localhost:8080/api/users/${userEmail}`)
