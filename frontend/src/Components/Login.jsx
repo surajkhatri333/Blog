@@ -1,6 +1,6 @@
 import styles from '../styles/Login.module.css'
 import {useNavigate} from 'react-router-dom'
-import { useState } from 'react'
+import { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import propTypes from 'prop-types'
 
@@ -10,7 +10,7 @@ export const Login = ({onLogin}) => {
   const navigate = useNavigate();
 
 
-  const handleLogin = async (e) => {
+  const handleLogin = useCallback(async (e) => {
     e.preventDefault();  // Prevent default form submit behavior
     try {
       const response = await axios.post("http://localhost:8080/api/v1/user/login", { email, password },{withCredentials:true});
@@ -20,9 +20,27 @@ export const Login = ({onLogin}) => {
     } catch (err) {
       console.log("Error handling login:", err);
     }
-  }
+  })
 
-  
+  useEffect(() => async ()=>{
+    // Check if token exists in cookies
+    const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+    if (token) {
+        // Token exists, make a request to verify it
+         await axios.get("http://localhost:8080/check", { withCredentials: true })
+            .then((res) => {
+                if (res.data.isLogin) {
+                    handleLogin(res.data.userEmail); // Assuming handleLogin sets the state
+                    // setisLogin(true);
+                    // setuserEmail(res.data.userEmail);
+                }
+            })
+            .catch((err) => {
+                console.error("Error verifying token", err);
+                handleLogin(null);
+            });
+    }
+}, [handleLogin]);
 
   return (
     <>

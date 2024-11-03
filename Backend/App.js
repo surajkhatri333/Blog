@@ -196,6 +196,16 @@ app.put("/likes/:id",verifyJwt,async (req,res)=>{
 
 })
 
+// user id
+app.get("/userid",verifyJwt,async(req,res)=>{
+    try{
+        return res.status(200).json({user : req.user.id});
+    }
+    catch(err){
+        console.log("user id can not send");
+    }
+})
+
 //API for end blog data for DASHBOARD
 app.get("/blogAnalytics",async (req,res)=>{
     const blog = {

@@ -33,7 +33,7 @@ const blogSchema = new mongoose.Schema(
             default : 0
         },
         comments: {
-            type: Number,
+            type: [String],
             default : 0
         }
 

@@ -65,7 +65,7 @@ function App() {
 
           } />
           <Route path="/create" element={<CreateBlog userEmail={email} login ={isLogin} />} />
-          <Route path="/show/:id" element={<ShowBlog />} />
+          <Route path="/show/:id" element={<ShowBlog/>} />
           <Route path="/MyBlogs/:email" element={<MyBlogs userEmail={email} />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           {/* <Route path="/login" element={<Logout onLogin={onLogout} />} /> */}

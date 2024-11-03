@@ -100,7 +100,7 @@ button {
 }
 
 button:hover {
-    background-color: #5a0e87;
+    background-color: #ff6b6b;
 }
 
 /* Adjusted textarea styling */
@@ -128,3 +128,6 @@ input{
     margin: auto;
     display: flex;
 }
+
+
+
