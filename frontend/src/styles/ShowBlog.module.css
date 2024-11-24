@@ -8,6 +8,8 @@
 }
 
 .blogContainer {
+    position: absolute;
+    top: 15%;
     width: 80%;
     max-width: 1200px;
     display: flex;
@@ -47,6 +49,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    
 }
 
 .image {
@@ -108,6 +111,8 @@ button:hover {
     width: 100%;
     min-height: 150px;
     padding: 1rem;
+    font-family: "Genos", sans-serif;
+    font-optical-sizing: auto;
     font-size: 1.2em;
     line-height: 1.5;
     color: #333;
@@ -118,6 +123,7 @@ button:hover {
     resize: vertical;  /* Allows vertical resizing without scrollbars */
     /* overflow-y: hidden; Hides scrollbar */
     outline: none;
+    
 }
 
 input{

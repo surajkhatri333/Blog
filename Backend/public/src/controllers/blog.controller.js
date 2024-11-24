@@ -13,8 +13,4 @@ export const createBlog = async()=>{
         console.log("something went wrong");
     }
 
-
-
-
-
 }

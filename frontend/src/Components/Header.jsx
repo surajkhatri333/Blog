@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styles from '../styles/Header.module.css'
-import { useEffect, useMemo, useState, } from "react";
+import { useEffect, useState, } from "react";
 import propTypes from 'prop-types'
 import axios from 'axios';
 
@@ -16,6 +16,7 @@ const Header = ({ isLogin, onLogout, userEmail }) => {
     const userData = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/user/${userEmail}`);
+            console.log(response)
             setuserData(response.data.users);
             console.log("users are : ", userdata)
         }
@@ -74,24 +75,20 @@ const Header = ({ isLogin, onLogout, userEmail }) => {
                     {isLogin ?
                         (
                             <>
-                                <div id="profileinfo">
-                                    <img
-                                        src={`http://localhost:8080/${userdata.profileAvatar.replace('\\', '/')}`}
-                                        alt="User Avatar"
-                                        style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-                                    />
-                                    <div id={styles.profile} ></div>
-                                </div>
-
+                                <img
+                                    src={`http://localhost:8080/${userdata.profileAvatar.replace('\\', '/')}`}
+                                    alt="User Avatar"
+                                    style={{ width: '60px', height: '60px', borderRadius: '50%' }}
+                                />
                                 <button onClick={onLogout}>LOGOUT </button>
                             </>
                         ) :
-                        (<button>
+                        (<button >
                             <Link to={"/login"}>Login</Link>
                         </button>)
                     }
 
-                    <button>
+                    <button id={styles.signup}>
                         <Link to={"/sign up"}>Sign Up</Link>
                     </button>
                 </div>

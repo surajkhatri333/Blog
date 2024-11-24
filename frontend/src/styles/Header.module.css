@@ -1,115 +1,188 @@
-*{
+* {
     box-sizing: border-box;
     margin: 0;
 }
-.header{
-    width : 100vw;
+
+.header {
+    width: 100vw;
     min-height: 10vh;
     /* border: 2px solid black; */
     display: flex;
-    font-size: 10px;
-    /* background-color: #D1E9F6; */
-    background-color: #2C3E50;
-    position: sticky;
+    justify-content: space-between;
+    font-size: 30px;
+    background-color: #F8F9FA;
+    /* background-color:#FF5722; */
+    position: fixed;
+    z-index: 5;
+    padding: 0px 4px;
     margin: 0%;
+    box-shadow: -13px 2px 2px rgb(236, 219, 219);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
 
-.logo{
-    width: 20%;
+.logo {
+    width: 10%;
     /* border: 2px solid black; */
     font-size: 1.7em;
     padding-left: 5%;
     display: flex;
-    justify-content: start;
+    justify-content: end;
     align-items: center;
 }
-.tabBar{
-    min-width: 60%;
-    width: auto;
-    /* border: 2px solid black; */
+
+/* Add smooth transition for tabBar */
+.tabBar {
     display: flex;
+    flex-direction: row;
+    /* position: absolute; */
     justify-content: center;
-    font-size: 10px;
-    display: flex;
     align-items: center;
-    text-align: center;
-    vertical-align: middle;
-    
+    width: 100%;
+    /* background-color: #2C3E50; */
+    /* Match header background */
+    padding: 1rem;
+    z-index: 5;
+    transition: max-height 0.3s ease-in-out;
+    /* Smooth height change */
+    overflow: hidden;
+    gap : 10px
+    /* Hide extra content */
 }
-.tab{
-    min-width: 80px;
-    width: max-content;
-    font-size: 1em;
-    margin: 0 4%;
+
+.show {
+    /* display: flex; Flexbox for vertical alignment */
+    max-height: 300px;
+    /* Expanded height, adjust as needed */
+}
+
+.tab {
+    padding: 0.5rem;
+    text-align: center;
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
+    font-size: 1.2rem;
     color: white;
 }
-.tab:hover{
+
+.tab:hover {
+    background-color: #2980B9;
+    color: white;
     cursor: pointer;
 }
-.account{
-    width: 40%;
-   
-    /* border: 2px solid black; */
+
+
+.account {
+    width: 20%;
     font-size: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 3%;
+    padding-right: 2%;
 }
-.account button{
+
+.account button {
     width: 30%;
     height: 5vh;
     font-size: 1em;
     background-color: #2980B9;
 }
-.account button:hover{
+
+.account button:hover {
     cursor: pointer;
     font-size: 1.1em;
 }
 
-#hamIcon{
+#hamIcon {
     width: 10%;
     display: none;
 }
+#profile{
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 80px;
+    border: 2px solid black;
+    z-index: 9;
+}
 
-@media (min-width : 0px ) and (max-width : 1000px){
-    .header{
+@media (min-width : 0px) and (max-width : 1300px) {
+    .header {
+        position: static;
         width: 100vw;
         justify-content: space-between;
         font-style: 10px;
     }
-    .logo{
+
+    .logo {
         width: 40%;
         font-size: 1em;
     }
-    .tabBar{
-        display: none;
-    }
-    .tab{
-        width: max-content;
-    }
-    .account{
-        padding: 2%;
-        display: none;
 
+    /* Add smooth transition for tabBar */
+    .tabBar {
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 10%;
+        justify-content: center;
+        background-color: #ffffff;
+        /* Match header background */
+        padding: 1rem;
+        z-index: 10;
+        transition: max-height 0.3s ease-in-out;
+       
     }
-    .account button{
+
+    .show {
+        /* display: flex; Flexbox for vertical alignment */
+        display: block;
+        max-height: 300px;
+        /* Expanded height, adjust as needed */
+    }
+
+    .tab {
+        padding: 0.5rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    .tab:hover {
+        background-color: #1d90dc;
+        color: white;
+        cursor: pointer;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .account {
+        padding: 2%;
+        /* display: none; */
+        position: relative;
+        left: 30%;
+    }
+    .account #signup{
+        display: none;
+    }
+
+    .account button {
         width: auto;
         height: max-content;
     }
-    i{
-       display: flex;
-       font-size: 2em;
-       justify-content: center;
-       align-content: center;
 
-    }
-    #hamIcon{
-        width: 10%;
-        display: block;
-        justify-content: center;
+    #hamIcon {
+        position: relative;
+        left: 12%;
+        font-size: 1.4em;
+        display: flex;
+        justify-content: end;
         /* padding-right: 1%; */
+        z-index: 200;
     }
 }
 
@@ -150,8 +223,6 @@
 } */
 
 
-a{
+a {
     color: white;
 }
-
-

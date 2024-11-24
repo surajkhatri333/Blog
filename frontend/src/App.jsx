@@ -3,6 +3,7 @@ import './App.css'
 import Blogs from './Components/Blogs.jsx'
 import Footer from './Components/Footer.jsx'
 import Header from './Components/Header.jsx'
+import {Hero} from './Components/Hero.jsx'
 import CreateBlog from './Components/CreateBlog.jsx'
 import { ShowBlog } from './Components/ShowBlog.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
@@ -17,7 +18,7 @@ import './App.css';
 
 import AdminDashboard from './Components/AdminDashboard.jsx';
 import BlogManagement from './Components/BlogManagment.jsx';
-import UserManagement from './Components/UserManagement.jsx';
+import {UserManagement} from './Components/UserManagement.jsx';
 import CommentManagement from './Components/CommnetMangment.jsx';
 import ReportedContent from  './Components/ReportedContent.jsx';
 
@@ -27,9 +28,7 @@ function App() {
   const [email, setuserEmail] = useState('');
 
 
-
-
-  const handleLogin = (userEmail) => {
+   const handleLogin = (userEmail) => {
     setisLogin(true);
     setuserEmail(userEmail);
   }
@@ -49,6 +48,7 @@ function App() {
     }
   }
 
+
   return (
     <>
 
@@ -58,11 +58,12 @@ function App() {
         <Routes>
           <Route path="/" element={
             <>
+             <Hero/>
               <Blogs />
               <CreateBlog />
               <Footer />
             </>
-
+            
           } />
           <Route path="/create" element={<CreateBlog userEmail={email} login ={isLogin} />} />
           <Route path="/show/:id" element={<ShowBlog/>} />

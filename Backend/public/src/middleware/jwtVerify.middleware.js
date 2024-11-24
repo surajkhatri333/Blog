@@ -12,7 +12,7 @@ export const verifyJwt = (req,res,next)=>{
         console.log("User authenticated:", req.user);
         next();
     } catch (err){
-        return res.status(401).josn({message :"Invalid token or expire token"})
+        return res.status(401).json({message :"Invalid token or expire token"})
     }
 
 }

@@ -25,14 +25,17 @@
     justify-content: center;
     align-items: center;
     width: 100vw;
-    min-height: 80vh;
-    padding: 2%;
+    min-height: 90vh;
+    padding: 5% ;
     background-color: var(--background-color);
+    border-bottom:  1px solid rgb(242, 233, 233);
+    box-shadow: -4px 0 5px 5px rgb(201, 197, 197);
+    /* margin: 8% 0; */
 }
 
 .card {
     background-color: var(--secondary-color);
-    padding: 2%;
+    padding: 2% ;
     border-radius: 12px;
     width: 100%;
     max-width: 900px;
@@ -117,4 +120,9 @@ input{
 
 .submitButton:hover {
     background-color: var(--button-hover-color);
+}
+@media (min-width : 0px) and (max-width : 1300px) {
+    .container{
+        margin: 0;
+    }
 }

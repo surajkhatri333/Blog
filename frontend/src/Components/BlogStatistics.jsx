@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 // import { fetchBlogStats } from '../Services/api.js';
 import axios from 'axios';
+import { fetchBlogStats } from '../Services/api';
 
 const BlogStatistics = () => {
     const [stats, setStats] = useState({

@@ -7,20 +7,30 @@ import propTypes from 'prop-types'
 export const Login = ({onLogin}) => {
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
+  const [role,setrole] = useState('');
   const navigate = useNavigate();
 
 
   const handleLogin = useCallback(async (e) => {
+
     e.preventDefault();  // Prevent default form submit behavior
+    if (!email || !password) {
+      console.log("Email and password are required.");
+      return;
+    }
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/user/login", { email, password },{withCredentials:true});
+      const response = await axios.post("http://localhost:8080/api/v1/user/login", 
+        { email, password ,isAdmin : false},
+        {withCredentials:true}
+      );
       console.log(response.data.message);
       onLogin(email);
       navigate("/");
+      console.log("succsfully login")
     } catch (err) {
       console.log("Error handling login:", err);
     }
-  })
+  }, [email, password, onLogin, navigate])
 
   useEffect(() => async ()=>{
     // Check if token exists in cookies
@@ -63,6 +73,7 @@ export const Login = ({onLogin}) => {
                 placeholder='Enter your password'
                 value={password} onChange={(e) => { setpassword(e.target.value) }} required />
             </div>
+           
 
             <div className={styles.submit}>
               {/* <button type='submit' ><Link to={"/"}>SUBMIT</Link></button> */}

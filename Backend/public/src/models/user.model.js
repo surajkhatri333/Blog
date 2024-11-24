@@ -3,6 +3,10 @@ import bcrypt from 'bcryptjs'
 // schema for use 
 
 const userSchema =  new mongoose.Schema({
+    profileAvatar : {
+        type :String,
+        require : true
+    },
     username: {
         type: String,
         require: true,
@@ -15,6 +19,18 @@ const userSchema =  new mongoose.Schema({
     password: {
         type: String,
         require: true
+    },
+    isAdmin : {
+        type : Boolean,
+        default : "false"
+    },
+    totalBlogs: {
+        type: Number,
+        default : 0
+    },
+    ban: {
+        type: Boolean,
+        require : true
     }
 },{timestamps:true});
 
