@@ -16,8 +16,6 @@ const Header = ({ isLogin, onLogout, userEmail }) => {
     const userData = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/user/${userEmail}`);
-            console.log(response)
-            console.log(response.data.users)
             setuserData(response.data.users);
             console.log("users are : ", userdata)
         }
@@ -119,97 +117,3 @@ Header.propTypes = {
 export default Header
 
 
-
-
-
-
-// import { Link } from 'react-router-dom';
-// import styles from '../styles/Header.module.css';
-// import { useEffect, useState } from 'react';
-// import PropTypes from 'prop-types';
-// import axios from 'axios';
-
-// const Header = ({ isLogin, onLogout, userEmail }) => {
-//     const [tab, setTab] = useState(false);
-//     const [isAdmin, setIsAdmin] = useState(false);
-
-//     const toggleTab = () => setTab((prev) => !prev);
-
-//     useEffect(() => {
-//         if (isLogin) {
-//             const checkAdminStatus = async () => {
-//                 try {
-//                     const response = await axios.get('http://localhost:8080/check', { withCredentials: true });
-//                     console.log(response);
-//                     setIsAdmin(response.data.isAdmin);
-//                 }
-
-//                 catch (error) {
-//                     console.error('Error verifying admin status:', error);
-//                 }
-//             }
-
-//             checkAdminStatus();
-//         }
-//         else {
-//             console.log("User is not logged in, skipping admin check.");
-//             setIsAdmin(false);
-//         }
-//     }, [isLogin]);
-
-//     return (
-//         <div className={styles.header}>
-//             <div className={styles.logo}>LOGO</div>
-
-//             <div className={`${styles.tabBar} ${tab ? styles.show : ''}`}>
-//                 <div className={styles.tab}>
-//                     <Link to="/">HOME</Link>
-//                 </div>
-
-//                 <div className={styles.tab}>
-//                     <Link to="/create">CREATE BLOG</Link>
-//                 </div>
-
-
-//                 <div className={styles.tab}>
-//                     <Link to={`/Myblogs/${userEmail}`}>MY BLOGS</Link>
-//                 </div>
-
-
-//                 {isAdmin && (
-//                     <>
-//                         <div className={styles.tab}>
-//                             <Link to="/Dashboard">DASHBOARD</Link>
-//                         </div>
-//                         <div className={styles.tab}>
-//                             <Link to="/Admin">ADMIN</Link>
-//                         </div>
-//                     </>
-//                 )}
-//             </div>
-
-//             <div className={styles.account}>
-//                 {isLogin ? (
-//                     <button onClick={onLogout}>Logout</button>
-//                 ) : (
-//                     <Link to="/login">
-//                         <button>Login</button>
-//                     </Link>
-//                 )}
-//                 <Link to="/signup">
-//                     <button>Sign Up</button>
-//                 </Link>
-//             </div>
-
-//             <i className={`fa-solid fa-bars ${styles.hamIcon}`} onClick={toggleTab}></i>
-//         </div>
-//     );
-// };
-
-// Header.propTypes = {
-//     isLogin: PropTypes.bool.isRequired,
-//     onLogout: PropTypes.func.isRequired,
-//     userEmail: PropTypes.string.isRequired,
-// };
-
-// export default Header;
