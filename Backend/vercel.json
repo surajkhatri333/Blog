@@ -2,11 +2,11 @@
     "projects": {
       "frontend": {
         "buildCommand": "npm run build",
-        "outputDirectory": "build"
+        "outputDirectory": "frontend"
       },
       "backend": {
         "buildCommand": "npm start",
-        "outputDirectory": "api"
+        "outputDirectory": "Backend"
       }
     }
   }
