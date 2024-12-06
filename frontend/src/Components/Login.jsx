@@ -19,7 +19,7 @@ export const Login = ({onLogin}) => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/user/login", 
+      const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/login`, 
         { email, password ,isAdmin : false},
         {withCredentials:true}
       );
@@ -37,7 +37,7 @@ export const Login = ({onLogin}) => {
     const token = document.cookie.split('; ').find(row => row.startsWith('token='));
     if (token) {
         // Token exists, make a request to verify it
-         await axios.get("http://localhost:8080/check", { withCredentials: true })
+         await axios.get("${import.meta.env.VITE_APP_REQUEST_API}/check", { withCredentials: true })
             .then((res) => {
                 if (res.data.isLogin) {
                     handleLogin(res.data.userEmail); // Assuming handleLogin sets the state

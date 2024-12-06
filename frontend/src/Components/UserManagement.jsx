@@ -1,9 +1,10 @@
 import axios from "axios"
+import styles from '../styles/BlogManagement.module.css'
 import { useEffect, useState } from "react";
 export const UserManagement = () => {
     const [users, setUsers] = useState([]);
     const fetchUser = async () => {
-        const response = await axios.get("http://localhost:8080/user");
+        const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user`);
         if (!response) {
             return console.log("Failed to get user data");
         }
@@ -12,7 +13,7 @@ export const UserManagement = () => {
         // console.log("Successfull in getting user data", response);
     }
    const banUser = async (userId)=>{
-    const response = await axios.put(`http://localhost:8080/api/v1/admin/ban/user/${userId}`);
+    const response = await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/ban/user/${userId}`);
     if(!response){
         return console.log("Unable to fetch baned user");
     }

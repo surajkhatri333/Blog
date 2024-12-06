@@ -13,7 +13,7 @@ const UserAnalytics = () => {
 
     useEffect(() => {
         const fetchUserAnalytics = async () => {
-            const userResponse = await axios.get("http://localhost:8080/userAnalytics");
+            const userResponse = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/userAnalytics`);
             if (!userResponse) return console.log("user data is not get from backend")
             setAnalytics(userResponse.data);
             console.log(userResponse.data)

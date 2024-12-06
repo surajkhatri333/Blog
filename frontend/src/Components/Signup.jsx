@@ -14,7 +14,7 @@ export const Signup = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/api/v1/user/register", { name, email, password, role ,profileAvatar});
+            const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/register`, { name, email, password, role ,profileAvatar });
             console.log(response.message);
             navigate("/login");
 
@@ -25,8 +25,11 @@ export const Signup = () => {
     const handleImage = (e)=>{
         const image = e.target.files[0];
         if(image){
+            console.log("file object : ",image)
             const imageUrl = URL.createObjectURL(image);
             setprofileAvatar(imageUrl)
+                console.log(profileAvatar)
+            
         }
     }
     return (

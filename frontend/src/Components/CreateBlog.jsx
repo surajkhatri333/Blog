@@ -33,13 +33,13 @@ import { useNavigate } from 'react-router-dom';
 
         try {
             // if(!login) window.alert("User is not login");
-            const response = await axios.post(`http://localhost:8080/api/users/${userEmail}`, formData);
+            const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/users/${userEmail}`, formData);
             console.log('Blog data sent to backend', response);
-            console.log(`http://localhost:8080/api/users/${userEmail}`)
+            console.log(`${import.meta.env.VITE_APP_REQUEST_API}/api/users/${userEmail}`)
             navigate("/")
         } catch (err) {
             console.log('Cannot receivve blog data to backend', err);
-            console.log(`http://localhost:8080/api/users/${userEmail}`)
+            console.log(`${import.meta.env.VITE_APP_REQUEST_API}/api/users/${userEmail}`)
         }
     };
 

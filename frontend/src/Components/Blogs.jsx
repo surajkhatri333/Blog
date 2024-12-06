@@ -19,7 +19,7 @@ const Blogs = () => {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await axios.get("http://localhost:8080/");
+                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/`);
                 const { blogs, users } = response.data;
                 console.log(response.data)
                 // Filter blogs based on banned status of users
@@ -45,13 +45,13 @@ const Blogs = () => {
         <>
             <div className={styles.blogContainer} >
                 {
-                    filteredBlogs.map((blog) => {
-                        if (blog.active === true) {
+                    filteredBlogs.filter(blog => blog.active == true).slice(0,blogVisible).map((blog) => {
+                    
                             return (
 
                                 <>
                                     <div className={styles.card} key={blog._id}>
-                                        <img src={`http://localhost:8080/${blog.image}`} className="cardImage" alt="..." style={{ width: '100%', height: '100%', boxSizing: "border-box", objectFit: "cover" }} />
+                                        <img src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image}`} className="cardImage" alt="..." style={{ width: '100%', height: '100%', boxSizing: "border-box", objectFit: "cover" }} />
                                         <div className={styles['card-body']}>
                                             <h5 className={styles['card-title']}>{blog.title}</h5>
                                             <p className={styles['card-text']}>{blog.short_headline}</p>
@@ -64,7 +64,6 @@ const Blogs = () => {
                                 </>
 
                             )
-                        }
                     })
 
 
@@ -82,7 +81,7 @@ const Blogs = () => {
         //         {filteredBlogs.slice(0, blogVisible).map((blog) => (
         //             <div className={styles.card} key={blog._id}>
         //                 <img
-        //                     src={`http://localhost:8080/${blog.image}`}
+        //                     src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image}`}
         //                     className={styles.cardImage}
         //                     alt={blog.title}
         //                 />

@@ -13,12 +13,12 @@ const Header = ({ isLogin, onLogout, userEmail }) => {
     const showTab = () => {
         settab(prev => !prev)
     };
-    const userData = async () => {
+    const userData =async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/user/${userEmail}`);
-            console.log(response)
+            const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`);
+            // console.log(response)
             setuserData(response.data.users);
-            console.log("users are : ", userdata)
+            // console.log("users are : ", userdata)
         }
         catch (Err) {
             console.log("Error in get user from backend", Err)
@@ -29,7 +29,8 @@ const Header = ({ isLogin, onLogout, userEmail }) => {
         if (isLogin) {
             const checkAdminStatus = async () => {
                 try {
-                    const response = await axios.get('http://localhost:8080/check', { withCredentials: true });
+                    // const response = await axios.get("http://localhost:8080/check", { withCredentials: true });
+                    const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/check`, { withCredentials: true });
                     console.log(response);
                     setIsAdmin(response.data.isAdmin);
                 }
@@ -46,10 +47,7 @@ const Header = ({ isLogin, onLogout, userEmail }) => {
             console.log("User is not logged in, skipping admin check.");
             setIsAdmin(false);
         }
-
-
-
-    }, [isLogin]);
+    }, [isLogin,isAdmin]);
 
 
 
@@ -63,7 +61,7 @@ const Header = ({ isLogin, onLogout, userEmail }) => {
                     <div className={styles.tab} id="tabs2"><Link to="/create">CREATE BLOG</Link></div>
                     <div className={styles.tab} id="tabs2" style={{ color: "black" }} onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })} >EXPLORE BLOG</div>
                     {isLogin && (<div className={styles.tab} id="tabs3"><Link to={`/Myblogs/${userEmail}`} >MY BLOGS</Link></div>)}
-                    {isAdmin && (
+                    {isAdmin &&  (
                         <>
                             <div className={styles.tab} id="tabs4"><Link to={"/Dashboard"}>Dashboard</Link></div>
                             <div className={styles.tab} id="tabs5"><Link to={"/Admin"}>ADMIN</Link></div>
@@ -75,11 +73,11 @@ const Header = ({ isLogin, onLogout, userEmail }) => {
                     {isLogin ?
                         (
                             <>
-                                <img
-                                    src={`http://localhost:8080/${userdata.profileAvatar.replace('\\', '/')}`}
+                                {isLogin && userdata && <img
+                                    src={`${import.meta.env.VITE_APP_REQUEST_API}/${userdata.profileAvatar.replace('\\', '/')}`}
                                     alt="User Avatar"
                                     style={{ width: '60px', height: '60px', borderRadius: '50%' }}
-                                />
+                                />}
                                 <button onClick={onLogout}>LOGOUT </button>
                             </>
                         ) :

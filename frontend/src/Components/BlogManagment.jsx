@@ -8,7 +8,7 @@ const BlogManagement = () => {
 
     const fetchBlog = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/");
+            const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/`);
             if (!response) {
                 console.log("Server is unable to send blogs");
             }
@@ -20,7 +20,7 @@ const BlogManagement = () => {
     }
     const toogleBlog = async (blogId) => {
         try{
-            const response = await axios.put(`http://localhost:8080/api/v1/admin/blog/toggle/${blogId}`);
+            const response = await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/blog/toggle/${blogId}`);
            
             setdata(prevdata => {
                 const updateBlogs =  prevdata.blogs.map(blog => {
@@ -45,8 +45,8 @@ useEffect(() => {
 }, []);
 
 return (
-    <div className={styles['blog-management']} style={{margin:"auto" , position:"absolute", top:"15%",left:"10%"}} >
-        <table border={4} width={"80%"} height={"70%"}>
+    <div className={styles['blog-management']} style={{width: "100%" ,margin:"auto" , position:"absolute", top:"15%"}} >
+        <table width={"100%"} height={"70%"}>
             <thead style={{textAlign:"center"}}>
                 <th>Username</th>
                 <th>Blog Title</th>

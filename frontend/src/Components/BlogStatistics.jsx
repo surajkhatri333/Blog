@@ -14,7 +14,7 @@ const BlogStatistics = () => {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const fetchBlogData = await axios.get("http://localhost:8080/blogAnalytics");
+                const fetchBlogData = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/blogAnalytics`);
                 if (!fetchBlogData)
                     console.log("Blog analytics is not ")
                 setStats(fetchBlogData.data);

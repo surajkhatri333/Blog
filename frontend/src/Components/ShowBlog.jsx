@@ -17,7 +17,7 @@ export const ShowBlog = () => {
     const handleChangeSave = async () => {
         setisEditing(false);
         try {
-            await axios.put(`http://localhost:8080/update/${id}`, data);
+            await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/update/${id}`, data);
             console.log("Blog updated successfully");
         } catch (err) {
             console.log("Blog not updated:", err);
@@ -37,7 +37,7 @@ export const ShowBlog = () => {
     useEffect(() => {
         const checkLikeStatus = async () => {
             try {
-                const res = await axios.get("http://localhost:8080/userid", { withCredentials: true });
+                const res = await axios.get("${import.meta.env.VITE_APP_REQUEST_API}/userid", { withCredentials: true });
                 const userId = res.data.user;
 
                 if (data.like && data.like.includes(userId)) {
@@ -54,7 +54,7 @@ export const ShowBlog = () => {
     // Handle like/dislike toggle
     const handleStatus = useCallback(async () => {
         try {
-            const response = await axios.put(`http://localhost:8080/likes/${id}`, {}, { withCredentials: true });
+            const response = await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/likes/${id}`, {}, { withCredentials: true });
             if (response.data) {
                 setLike((prev) => !prev);  // Toggle the like state
                 setData((prevData) => ({
@@ -77,7 +77,7 @@ export const ShowBlog = () => {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/show/${id}`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/show/${id}`);
                 setData(response.data);
             } catch (err) {
                 console.log(`Cannot fetch blog data with ID: ${id}`, err);
@@ -94,7 +94,7 @@ export const ShowBlog = () => {
                     <div id={styles.blogContainer1}>
                         <div className={styles.blogContents}>
                             <div className={styles.image}>
-                                <img src={`http://localhost:8080/${data.image}`} alt="" width="100%" height="300px" />
+                                <img src={`${import.meta.env.VITE_APP_REQUEST_API}/${data.image}`} alt="" width="100%" height="300px" />
                                 <div className={styles.fields}>
                                     {isEditing ? (
                                         <>

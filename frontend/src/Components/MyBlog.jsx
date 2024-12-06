@@ -10,7 +10,7 @@ export const MyBlogs = ({userEmail}) => {
     useEffect(() => {
         const fetchdata = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/MyBlogs/${userEmail}`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/MyBlogs/${userEmail}`);
                 if(!response){
                    alert("User is not login! sign in first");
                 }
@@ -35,7 +35,7 @@ export const MyBlogs = ({userEmail}) => {
                                 <div className={style.myBlog} key={blog._id}>
                                     <div className={style.myBlogContent}>
                                         <div className={style.myImage}>
-                                            <img src={`http://localhost:8080/${blog.image}`} alt="" width={"100%"} height={"100%"} />
+                                            <img src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image}`} alt="" width={"100%"} height={"100%"} />
                                         </div>
                                         <div className={style.detail}>
                                             <div className={style.title}>Title : {blog.title}</div>

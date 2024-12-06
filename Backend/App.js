@@ -20,7 +20,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(bodyParser());
-app.use("/public/temp", express.static("public/temp"))
+app.use("/temp", express.static("public/temp"))
 
 
 
@@ -121,7 +121,7 @@ app.post("/api/users/:owner", upload.single("image"), async (req, res) => {
         const newBlog = await Blog.create(
             {
                 owner,
-                image: req.file.path,
+                image: req.file.path.replace(/^public[\\/]/, ""),
                 title,
                 short_headline,
                 description,

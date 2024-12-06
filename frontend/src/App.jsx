@@ -38,7 +38,7 @@ function App() {
     // setuserEmail('');
 
     try{
-      const response = await axios.post("http://localhost:8080/api/v1/user/logout", {}, { withCredentials: true })
+      const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/logout`, {}, { withCredentials: true })
         setisLogin(false);
         setuserEmail(null); // Clear user email
         console.log("user logout successfully");
