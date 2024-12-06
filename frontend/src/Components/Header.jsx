@@ -15,7 +15,7 @@ const Header = ({ isLogin, onLogout, userEmail }) => {
     };
     const userData =async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`);
+            const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`,{ withCredentials: true});
             // console.log(response)
             setuserData(response.data.users);
             // console.log("users are : ", userdata)

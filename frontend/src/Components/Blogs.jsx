@@ -19,7 +19,7 @@ const Blogs = () => {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/`,{ withCredentials: true});
                 const { blogs, users } = response.data;
                 console.log(response.data)
                 // Filter blogs based on banned status of users
