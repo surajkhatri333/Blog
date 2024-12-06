@@ -12,6 +12,7 @@ const app = express();
 
 app.use(cors({
     origin: 'https://blog-frontend-gray-xi.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
 
