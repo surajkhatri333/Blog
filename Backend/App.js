@@ -11,7 +11,7 @@ import { upload } from './public/src/middleware/multer.middleware.js'
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://blog-frontend-gray-xi.vercel.app',
     credentials: true
 }));
 
