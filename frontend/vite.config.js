@@ -11,6 +11,6 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: './dist', // Ensure this matches Vercel's expected output
+    outDir: 'dist', // Ensure this matches Vercel's expected output
   },
 });
