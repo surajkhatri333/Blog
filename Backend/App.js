@@ -12,10 +12,10 @@ const app = express();
 
 app.use(cors({
     origin: 'https://blog-frontend-gray-xi.vercel.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['get', 'post', 'put', 'delete'],
     credentials: true
 }));
-
+// app.options('*',cors);
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
