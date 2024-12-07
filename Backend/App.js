@@ -15,7 +15,7 @@ app.use(cors({
     methods: ['get', 'post', 'put', 'delete'],
     credentials: true
 }));
-app.options('*',cors);
+// app.options('*',cors);
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
