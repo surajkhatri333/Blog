@@ -11,7 +11,7 @@ import { upload } from './public/src/middleware/multer.middleware.js'
 const app = express();
 
 app.use(cors({
-    origin: 'https://blog-frontend-gray-xi.vercel.app/',
+    origin: 'https://blog-frontend-gray-xi.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
@@ -35,7 +35,7 @@ import adminRouter from './public/src/routes/adminRoutes.router.js'
 
 
 
-app.use("/api/v1/user", userRouter);
+app.use("/api/v1/user", userRouter,()=>{console.log("login called")});
 app.use("/api/v1/admin", adminRouter)
 
 app.get('/test', (req, res) => {
