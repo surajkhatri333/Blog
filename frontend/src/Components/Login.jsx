@@ -1,13 +1,13 @@
 import styles from '../styles/Login.module.css'
-import {useNavigate} from 'react-router-dom'
-import { useState,useCallback,useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useState, useCallback, useEffect } from 'react'
 import axios from 'axios'
 import propTypes from 'prop-types'
 
-export const Login = ({onLogin}) => {
+export const Login = ({ onLogin }) => {
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
-  const [role,setrole] = useState('');
+  // const [role,setrole] = useState('');
   const navigate = useNavigate();
 
 
@@ -19,10 +19,12 @@ export const Login = ({onLogin}) => {
       return;
     }
     try {
-      const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/login`, 
-        { email, password ,isAdmin : false},
-        {withCredentials:true}
+      console.log("login api is : ", `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/login`);
+      const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/login`,
+        { email, password, isAdmin: false },
+        { withCredentials: true }
       );
+      console.log(response.token)
       console.log(response.data.message);
       onLogin(email);
       navigate("/");
@@ -32,29 +34,28 @@ export const Login = ({onLogin}) => {
     }
   }, [email, password, onLogin, navigate])
 
-  useEffect(() => async ()=>{
-    // Check if token exists in cookies
-    const token = document.cookie.split('; ').find(row => row.startsWith('token='));
-    if (token) {
-        // Token exists, make a request to verify it
-         await axios.get("${import.meta.env.VITE_APP_REQUEST_API}/check", { withCredentials: true })
-            .then((res) => {
-                if (res.data.isLogin) {
-                    handleLogin(res.data.userEmail); // Assuming handleLogin sets the state
-                    // setisLogin(true);
-                    // setuserEmail(res.data.userEmail);
-                }
-            })
-            .catch((err) => {
-                console.error("Error verifying token", err);
-                handleLogin(null);
-            });
-    }
-}, [handleLogin]);
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+      if (token) {
+        try {
+          const res = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/check`, { withCredentials: true });
+          if (res.data.isLogin) {
+            onLogin(res.data.userEmail); // This should just update the state, not call handleLogin
+          }
+        } catch (err) {
+          console.error("Error verifying token", err);
+          onLogin(null);
+        }
+      }
+    };
+
+    checkToken();
+  }, [onLogin]);
 
   return (
     <>
-      <form  onSubmit={handleLogin} method='post'>
+      <form onSubmit={handleLogin} method='post'>
         <div className={styles.container}>
 
           <div className={styles.loginContainer}>
@@ -73,7 +74,7 @@ export const Login = ({onLogin}) => {
                 placeholder='Enter your password'
                 value={password} onChange={(e) => { setpassword(e.target.value) }} required />
             </div>
-           
+
 
             <div className={styles.submit}>
               {/* <button type='submit' ><Link to={"/"}>SUBMIT</Link></button> */}
@@ -84,13 +85,13 @@ export const Login = ({onLogin}) => {
 
         </div>
       </form>
-      
+
     </>
   )
 }
 
 Login.propTypes = {
-  onLogin : propTypes.func.isRequired
+  onLogin: propTypes.func.isRequired
 }
 
 

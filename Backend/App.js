@@ -10,12 +10,12 @@ import { upload } from './public/src/middleware/multer.middleware.js'
 
 const app = express();
 
-app.use(cors({
-    origin: "https://blog-frontend-gray-xi.vercel.app",
-    methods: ['get', 'post', 'put', 'delete'],
-    credentials: true
-}));
-app.options('*',cors);
+app.use(cors(
+    {
+        origin: 'http://localhost:5173', // Your frontend's URL
+        credentials: true, // Allow credentials (cookies, headers, etc.)
+      }
+));
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
@@ -32,11 +32,26 @@ import { Blog } from './public/src/models/blog.model.js'
 import { ApiResponse } from './public/src/utils/ApiResponse.js'
 import { verifyJwt } from './public/src/middleware/jwtVerify.middleware.js'
 import adminRouter from './public/src/routes/adminRoutes.router.js'
+import  blogStatisticRouter  from './public/src/routes/AdminDashboard/BlogStatistic.router.js'
 
 
 
-app.use("/api/v1/user", userRouter,()=>{console.log("login called")});
+app.use("/api/v1/user",userRouter);
 app.use("/api/v1/admin", adminRouter)
+
+// admin dashboard
+app.use("/api/v1/admin/dashbord/",Blog)
+
+
+
+
+
+
+
+
+
+
+
 
 app.get('/test', (req, res) => {
     res.send('Test route working!');
@@ -44,7 +59,7 @@ app.get('/test', (req, res) => {
 
 app.get("/check",verifyJwt, (req, res) => {
     // This route will only be reached if the token is valid
-    return res.status(200).json({ message : "token verified",isAdmin: req.user.isAdmin}); // Send user details if needed
+    return res.status(200).json({ message : "token verified",isAdmin: req.user.isAdmin,isLogin:true}); // Send user details if needed
 });
 
 
@@ -71,7 +86,7 @@ app.post('/api/users', async (req, res) => {
     }
 });
 
-app.get("/", async (req, res) => {
+app.get("/", verifyJwt,async (req, res) => {
     try {
         const blogs = await Blog.find({});
         const users = await User.find({});
@@ -98,9 +113,9 @@ app.get("/user", async (req, res) => {
 app.get("/user/:email", async (req, res) => {
     try {
         const userEmail  = req.params;
-        console.log(userEmail)
+        // console.log(userEmail)
         const users = await User.findOne(userEmail);
-        console.log(users)
+        // console.log(users)
         return res.status(200).json({ message: "User data is send",users })
     }
     catch(err){
@@ -205,6 +220,33 @@ app.put("/update/:id", async (req, res) => {
     }
 })
 
+//comments added
+app.post('/comments/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { comment } = req.body;
+
+        // Validate inputs
+        if (!comment) {
+            return res.status(400).send({ error: 'Comment cannot be empty' });
+        }
+
+        const blog = await Blog.findById(id);
+        if (!blog) {
+            return res.status(404).send({ error: 'Blog not found' });
+        }
+
+        blog.comments.push(comment);
+        await blog.save();
+
+        res.status(201).send({ newComment: comment });
+    } catch (error) {
+        console.error("Error saving comment:", error);
+        res.status(500).send({ error: 'Server error' });
+    }
+});
+
+
 //likes id
 app.put("/likes/:id", verifyJwt, async (req, res) => {
     try {
@@ -252,20 +294,14 @@ app.get("/userid", verifyJwt, async (req, res) => {
 })
 
 //API for end blog data for DASHBOARD
-app.get("/blogAnalytics", async (req, res) => {
-    const blog = {
-        totalBlogs: await Blog.countDocuments(),
-        recentBlogs: await Blog.find().sort({ createdAt: -1 }).limit(5)
-    }
-    console.log(blog)
-    res.json(blog);
-});
+app.use("/api/v1/blog", blogStatisticRouter);
 
 //API FOR USER BLOG DATA FOR DASHBOARD
-app.get("/userAnalytics", async (req, res) => {
+app.use("/userAnalytics", async (req, res) => {
     const user = {
         totalUsers: await User.countDocuments(),
-        newUsers: await User.find().sort({ createdAt: -1 }).limit(5)
+        newUsers: await User.find().sort({ createdAt: -1 }).limit(5),
+        totalBlogs : await Blog.countDocuments()
     }
     res.status(200).json(user)
 

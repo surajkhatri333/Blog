@@ -1,114 +1,136 @@
 import { Link } from 'react-router-dom';
-import styles from '../styles/Header.module.css'
-import { useEffect, useState, } from "react";
-import propTypes from 'prop-types'
+import { useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
-
 const Header = ({ isLogin, onLogout, userEmail }) => {
-    const [tab, settab] = useState(false);
-    const [userdata, setuserData] = useState();
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [userData, setUserData] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
 
-    const showTab = () => {
-        settab(prev => !prev)
-    };
-    const userData =async () => {
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`,{ withCredentials: true});
-            // console.log(response)
-            setuserData(response.data.users);
-            // console.log("users are : ", userdata)
-        }
-        catch (Err) {
-            console.log("Error in get user from backend", Err)
-        }
+    const toggleMenu = () => setMenuOpen(!menuOpen);
 
-    }
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`, { withCredentials: true });
+            setUserData(response.data.users);
+        } catch (error) {
+            console.error("Failed to fetch user data", error);
+        }
+    };
+
     useEffect(() => {
         if (isLogin) {
             const checkAdminStatus = async () => {
                 try {
-                    // const response = await axios.get("http://localhost:8080/check", { withCredentials: true });
                     const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/check`, { withCredentials: true });
-                    console.log(response);
                     setIsAdmin(response.data.isAdmin);
+                } catch (error) {
+                    console.error("Admin check failed", error);
                 }
-
-                catch (error) {
-                    console.error('Error verifying admin status:', error);
-                }
-            }
-
+            };
             checkAdminStatus();
-            userData()
-        }
-        else {
-            console.log("User is not logged in, skipping admin check.");
+            fetchUserData();
+        } else {
             setIsAdmin(false);
         }
-    }, [isLogin,isAdmin]);
-
-
+    }, [isLogin]);
 
     return (
-        <>
-            <div className={styles.header}>
-                <div className={styles.logo}>LOGO</div>
-                {/* <div className={styles.tabBar} style={{display : tab ? "block" : "none"}} > */}
-                <div className={`${styles.tabBar} ${tab ? styles.show : ''}`} >
-                    <div className={styles.tab} id="tabs1"><Link to="/">HOME</Link></div>
-                    <div className={styles.tab} id="tabs2"><Link to="/create">CREATE BLOG</Link></div>
-                    <div className={styles.tab} id="tabs2" style={{ color: "black" }} onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })} >EXPLORE BLOG</div>
-                    {isLogin && (<div className={styles.tab} id="tabs3"><Link to={`/Myblogs/${userEmail}`} >MY BLOGS</Link></div>)}
-                    {isAdmin &&  (
-                        <>
-                            <div className={styles.tab} id="tabs4"><Link to={"/Dashboard"}>Dashboard</Link></div>
-                            <div className={styles.tab} id="tabs5"><Link to={"/Admin"}>ADMIN</Link></div>
-                        </>
-                    )}
-
-                </div>
-                <div className={styles.account}>
-                    {isLogin ?
-                        (
-                            <>
-                                {isLogin && userdata && <img
-                                    src={`${import.meta.env.VITE_APP_REQUEST_API}/${userdata.profileAvatar.replace('\\', '/')}`}
-                                    alt="User Avatar"
-                                    style={{ width: '60px', height: '60px', borderRadius: '50%' }}
-                                />}
-                                <button onClick={onLogout}>LOGOUT </button>
-                            </>
-                        ) :
-                        (<button >
-                            <Link to={"/login"}>Login</Link>
-                        </button>)
-                    }
-
-                    <button id={styles.signup}>
-                        <Link to={"/sign up"}>Sign Up</Link>
+        <header className="fixed bg-white shadow-md z-50 flex justify-center items-center">
+            
+            <div className="w-full max-w-7xl max-h-14  mx-auto flex justify-around items-center">
+                {/* Hamburger Menu (Mobile) */}
+                <div className="pl-2 md:hidden">
+                    <button onClick={toggleMenu}>
+                        <i className="fa-solid fa-bars text-2xl text-gray-700"></i>
                     </button>
                 </div>
-                <i className="fa-solid fa-bars" id={styles.hamIcon} onClick={showTab}>
-                    {/* {tab ? 'Close' : 'Menu'} */}
-                </i>
+                {/* Logo */}
+                <div className="text-2xl font-semibold text-gray-800">
+                    <Link to="/">YourBlog</Link>
+                </div>
+
+                {/* Nav Links (Desktop) */}
+                <nav className="hidden md:flex gap-4 space-x-6 text-gray-700 font-medium">
+                    <Link to="/" className="hover:text-blue-600 transition">Home</Link>
+                    <Link to="/create" className="hover:text-blue-600 transition">Create Blog</Link>
+                    <button onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })} className="hover:text-blue-600 transition">Explore</button>
+                    {isLogin && (
+                        <Link to={`/Myblogs/${userEmail}`} className="hover:text-blue-600 transition">My Blogs</Link>
+                    )}
+                    {isAdmin && (
+                        <>
+                            <Link to="/Dashboard" className="hover:text-blue-600 transition">Dashboard</Link>
+                            <Link to="/Admin" className="hover:text-blue-600 transition">Admin</Link>
+                        </>
+                    )}
+                </nav>
+
+                {/* Auth Buttons */}
+                <div className="flex items-center gap-5">
+                    {isLogin ? (
+                        <>
+                            {userData && (
+                                <img
+                                    src={`${import.meta.env.VITE_APP_REQUEST_API}/${userData.profileAvatar.replace('\\', '/')}`}
+                                    alt="User Avatar"
+                                    className="w-10 h-10 rounded-full object-cover border"
+                                />
+                            )}
+                            <button
+                                onClick={onLogout}
+                                className="w-20 h-10 bg-red-500 hover:bg-red-600 text-white px-4 py-2 m-2 rounded-md text-sm font-medium"
+                            >
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link
+                                to="/login"
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium"
+                            >
+                                Login
+                            </Link>
+                            <Link
+                                to="/sign up"
+                                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2  rounded-md text-sm font-medium"
+                            >
+                                Sign Up
+                            </Link>
+                        </>
+                    )}
+                </div>
+
+                
             </div>
 
+            {/* Mobile Menu */}
+            {menuOpen && (
+                <nav className="md:hidden w-full bg-white border-t border-gray-200 px-4 py-4 space-y-3">
+                    <Link to="/" className="block text-gray-700 hover:text-blue-600">Home</Link>
+                    <Link to="/create" className="block text-gray-700 hover:text-blue-600">Create Blog</Link>
+                    <button onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })} className="block text-gray-700 hover:text-blue-600">Explore</button>
+                    {isLogin && (
+                        <Link to={`/Myblogs/${userEmail}`} className="block text-gray-700 hover:text-blue-600">My Blogs</Link>
+                    )}
+                    {isAdmin && (
+                        <>
+                            <Link to="/Dashboard" className="block text-gray-700 hover:text-blue-600">Dashboard</Link>
+                            <Link to="/Admin" className="block text-gray-700 hover:text-blue-600">Admin</Link>
+                        </>
+                    )}
+                </nav>
+            )}
+        </header>
+    );
+};
 
-        </>
-
-    )
-
-
-}
 Header.propTypes = {
-    isLogin: propTypes.bool.isRequired,
-    onLogout: propTypes.func.isRequired,
-    userEmail: propTypes.string.isRequired,
-    handleLogin: propTypes.func.isRequired
-}
+    isLogin: PropTypes.bool.isRequired,
+    onLogout: PropTypes.func.isRequired,
+    userEmail: PropTypes.string.isRequired,
+};
 
-export default Header
-
-
+export default Header;

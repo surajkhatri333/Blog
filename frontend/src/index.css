@@ -1,22 +1,3 @@
 *{
-  padding: 0px;
-  margin: 0px;
-  box-sizing: border-box;
   overflow-x: hidden;
 }
-a{
-  text-decoration-line: none;
-  color: black;
-  
-}
-
-a:hover{
-  cursor: pointer;
-  color: rgb(0, 0, 0);
-}
-
-button :hover{
-  cursor: pointer;
-  scale: 1;
-}
-

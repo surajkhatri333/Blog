@@ -61,7 +61,7 @@ export const userRegister = asyncHandler(async (req, res) => {
     // }
     try {
         let { profileAvatar, name, email, password, role } = req.body;
-        console.log(req.body)
+        // console.log(req.body)
 
         if (!profileAvatar || !name || !email || !password) {
             return res.status(400).json(new ApiError(400, "Please fill all required details"));
@@ -110,7 +110,7 @@ export const userRegister = asyncHandler(async (req, res) => {
             return res.status(500).json(new ApiError(500, "Something went wrong while registering"));
         }
 
-        console.log(userCreated);
+        // console.log(userCreated);
 
         return res.status(200).json(
             new ApiResponse(200, user, `${role} successfully registered`)
@@ -125,73 +125,68 @@ export const userRegister = asyncHandler(async (req, res) => {
 
 
 export const userLogin = asyncHandler(async (req, res) => {
-
+    console.log("login request comes")
     try {
-        const { email, password } = req.body;
-        console.log(req.body);
+        const { email, password, isAdmin } = req.body;
+        console.log(req.body)
         if (!email || !password) {
-            return res.status(400).json(new ApiError(400, "Something went wrong while login user"));
+            return res.status(400).json(new ApiError(400, "Email and password are required"));
         }
-
-        const userExist =
-            await User.findOne({ $or: [{ email: email }, { username: email }] }) || await Admin.findOne({ $or: [{ email: email }, { username: email }] });
-        console.log(userExist);
-
+        console.log("error 1")
+        let userExist;
+        if (isAdmin) {
+            userExist = await Admin.findOne({ $or: [{ email }, { username: email }] });
+        } else {
+            userExist = await User.findOne({ $or: [{ email }, { username: email }] });
+        }
+        console.log("error 2")
         if (!userExist) {
-            return res.status(400).json(new ApiError(400, "Invalid user"));
+            return res.status(400).json(new ApiError(400, "Invalid email or username"));
         }
 
-        const checkPassword =  bcrypt.compare(password, userExist.password);
-
-        if (!checkPassword) {
-            console.log("Invalid password");
-            return res.status(400).json(new ApiError(400, "Wrong password"));
+        const isPasswordValid = await bcrypt.compare(password, userExist.password);
+        if (!isPasswordValid) {
+            return res.status(400).json(new ApiError(400, "Incorrect password"));
         }
+        console.log("error 3")
+        console.log("error 4")
 
-
-        console.log("password is :", checkPassword);
-
-        //generate access token
         const token = jwt.sign(
             { id: userExist._id, isAdmin: userExist.isAdmin },
             process.env.ACCESS_TOKEN_SECRET,
-            {
-                expiresIn: "1h"
-            }
+            { expiresIn: "1h" }
         );
-
-        //set cookies
+        console.log("error 5")
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 3600000,
             secure: false,
-            samesite: "Lax",
-            path:"/"
-        })
+            sameSite: "Lax",
+            path: "/"
+        });
 
-        console.log("user login successfully");
-        console.log(token)
-
-        return res.status(200).json({message: "you are successfuly login", token});
-
+        return res.status(200).json({ message: "Login successful", token });
+    } catch (err) {
+        console.error("Login failed:", err);
+        return res.status(500).json(new ApiError(500, "Server error while logging in"));
     }
-    catch(err){
-        console.log("server error while login user")
-    }
-
 });
 
-export const userLogout = asyncHandler(async (req, res) => {
-    res.clearCookie('token', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
-    });
-    return res.status(200).json({ message: "Logged out successfully" });
-    // res.cookie("token", "", {
-    //     httpOnly: true,
-    //     expires: new Date(0)
-    // })
 
-    // return res.status(200).json(new ApiResponse(200, "User successfully logout"))
-})
+
+export const userLogout = asyncHandler(async (req, res) => {
+    try {
+        // Clear the token cookie
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // true in production
+            sameSite: "Lax",
+            path: "/"
+        });
+
+        return res.status(200).json({ message: "Logout successful" });
+    } catch (err) {
+        console.error("Logout failed:", err);
+        return res.status(500).json(new ApiError(500, "Server error during logout"));
+    }
+});

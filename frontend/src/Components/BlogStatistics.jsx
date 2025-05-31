@@ -1,65 +1,69 @@
-// BlogStatistics.js
 import { useState, useEffect } from 'react';
-// import { fetchBlogStats } from '../Services/api.js';
 import axios from 'axios';
-import { fetchBlogStats } from '../Services/api';
+import { Link } from 'react-router-dom';
 
 const BlogStatistics = () => {
     const [stats, setStats] = useState({
         totalBlogs: 0,
         recentBlogs: [],
-        popularBlogs: [],
-        pendingReviews: []
     });
+
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-        const fetchBlog = async () => {
+        const fetchBlogStatistic = async () => {
             try {
-                const fetchBlogData = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/blogAnalytics`);
-                if (!fetchBlogData)
-                    console.log("Blog analytics is not ")
-                setStats(fetchBlogData.data);
+                const response = await axios.get(
+                    `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/blog/statistic`
+                );
+                setStats(response.data);
+            } catch (error) {
+                console.error("Blog statistic fetching error:", error.message);
+            } finally {
+                setLoading(false);
             }
-            catch (err) {
-                console.log("Blog is not fetch: ", err)
-            }
-        }
-        fetchBlog();
+        };
 
-    }, [])
-
-
-    // useEffect(() => {
-    //     fetchBlogD().then(data => {
-    //         setStats(data);
-    //     });
-    // }, []);
+        fetchBlogStatistic();
+    }, []);
 
     return (
-        <div className="blog-statistics">
-            <h2>Blog Statistics</h2>
-            <p>Total Blogs: {stats.totalBlogs}</p>
-            <h3>Recent Blogs</h3>
-            <ul>
-             
-                    {
-                        stats.recentBlogs.map(blog => (
-                            <li key={blog.id}>{blog.title}</li>
-                        ))
-                    }
-                
-            </ul>
-            {/* <h3>Most Popular Blogs</h3>
-            <ul>
-                {stats.popularBlogs.map(blog => (
-                    <li key={blog.id}>{blog.title} - {blog.views} views</li>
-                ))}
-            </ul>
-            <h3>Pending Reviews</h3>
-            <ul>
-                {stats.pendingReviews.map(blog => (
-                    <li key={blog.id}>{blog.title}</li>
-                ))}
-            </ul> */}
+        <div className="max-w-6xl w-4xl bg-white p-6 rounded-2xl shadow-md border border-gray-200 ">
+            <h2 className="text-2xl text-center font-semibold mb-4 text-indigo-800">📝 Blog Statistics</h2>
+
+            {loading ? (
+                <p className="text-gray-500">Loading statistics...</p>
+            ) : (
+                <>
+                    <p className="text-3xl text-gray-700 mb-2">
+                        <span className="font-bold">Total Blogs:</span> {stats.totalBlogs}
+                    </p>
+
+                    <h3 className="text-md font-semibold mt-6 mb-3 text-gray-800">Recent Blogs</h3>
+                    <ul className="max-h-48 overflow-y-auto space-y-3 pr-2 ">
+                        {stats.recentBlogs.length === 0 ? (
+                            <li className="text-gray-500">No recent blogs.</li>
+                        ) : (
+                            stats.recentBlogs.map((blog, index) => (
+                                <li key={blog._id || index} className="flex items-center justify-between gap-4 bg-gray-50 px-4 py-2 rounded-lg">
+                                    <span className="text-gray-700">{blog.title}</span>
+                                    <Link
+                                        to={`/show/${blog._id}`}
+                                        className="mt-4 text-indigo-600 font-medium hover:underline"
+                                    >
+                                        <img
+                                            src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image.replace('\\', '/')}`}
+                                            alt="Blog"
+                                            className="w-10 h-10 object-cover rounded-full border"
+                                        />
+                                    </Link>
+
+                                </li>
+                            ))
+                        )}
+                    </ul>
+                </>
+            )}
         </div>
     );
 };

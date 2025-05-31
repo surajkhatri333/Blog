@@ -1,10 +1,8 @@
-// BlogManagement.js
 import { useEffect, useState } from 'react';
-import styles from '../styles/BlogManagement.module.css'
 import axios from 'axios';
 
 const BlogManagement = () => {
-    const [data, setdata] = useState({blogs:[],users:[]});
+    const [data, setData] = useState({ blogs: [], users: [] });
 
     const fetchBlog = async () => {
         try {
@@ -12,73 +10,67 @@ const BlogManagement = () => {
             if (!response) {
                 console.log("Server is unable to send blogs");
             }
-            setdata(response.data)
+            setData(response.data);
+        } catch (err) {
+            console.log("Unable to fetch blogs");
         }
-        catch (err) {
-            console.log("unable to fetch blogs");
-        }
-    }
-    const toogleBlog = async (blogId) => {
-        try{
-            const response = await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/blog/toggle/${blogId}`);
-           
-            setdata(prevdata => {
-                const updateBlogs =  prevdata.blogs.map(blog => {
-                    if(blog._id == blogId) {
-                         return{ ...blog, active: !blog.active }
-                    } 
+    };
+
+    const toggleBlog = async (blogId) => {
+        try {
+            await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/blog/toggle/${blogId}`);
+
+            setData(prevData => {
+                const updatedBlogs = prevData.blogs.map(blog => {
+                    if (blog._id === blogId) {
+                        return { ...blog, active: !blog.active };
+                    }
                     return blog;
-                })
-                return {...prevdata,blogs: updateBlogs}
-            })
-        }
-        catch(err){
-            console.log("can;t get blog managment")
+                });
+                return { ...prevData, blogs: updatedBlogs };
+            });
+        } catch (err) {
+            console.log("Can't get blog management");
             alert("Failed to update blog status. Please try again.");
-        }       
-        
-    }
+        }
+    };
 
+    useEffect(() => {
+        fetchBlog();
+    }, []);
 
-useEffect(() => {
-    fetchBlog()
-}, []);
-
-return (
-    <div className={styles['blog-management']} style={{width: "100%" ,margin:"auto" , position:"absolute", top:"15%"}} >
-        <table width={"100%"} height={"70%"}>
-            <thead style={{textAlign:"center"}}>
-                <th>Username</th>
-                <th>Blog Title</th>
-                <th>Blog likes</th>
-                <th>Hide blog</th>
-            </thead>
-            <tbody style={{textAlign:"justify",}}>
-                {
-                    data.blogs.map(blog => {
-                        // console.log("rendering blog ",blog)
-                        return (
-                            <tr key={blog._id} >
-                                <td style={{paddingLeft:"2%"}}>{blog.owner}</td>
-                                <td >{blog.title}</td>
-                                <td >{blog.likesCount}</td>
-                                <td >
-                                    <i className= "fa-solid fa-toggle-on" id={blog.id}
-                                        style={{ color: blog.active?"green":"black" }}
-                                        onClick={()=>toogleBlog(blog._id)}>
-
-                                    </i>
+    return (
+        <div className="absolute top-[15%] w-full max-w-7xl mx-auto px-4">
+            <div className="overflow-x-auto shadow-md rounded-lg">
+                <table className="min-w-full bg-white">
+                    <thead className="bg-gray-100 text-center">
+                        <tr>
+                            <th className="py-3 px-6 text-sm font-medium text-gray-700">Username</th>
+                            <th className="py-3 px-6 text-sm font-medium text-gray-700">Blog Title</th>
+                            <th className="py-3 px-6 text-sm font-medium text-gray-700">Blog Likes</th>
+                            <th className="py-3 px-6 text-sm font-medium text-gray-700">Hide Blog</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-justify">
+                        {data.blogs.map((blog) => (
+                            <tr key={blog._id} className="border-b hover:bg-gray-50">
+                                <td className="py-2 px-4">{blog.owner}</td>
+                                <td className="py-2 px-4">{blog.title}</td>
+                                <td className="py-2 px-4">{blog.likesCount}</td>
+                                <td className="py-2 px-4 text-center">
+                                    <i
+                                        className={`fa-solid fa-toggle-on cursor-pointer text-2xl transition-colors duration-300 ${blog.active ? 'text-green-600' : 'text-gray-600'
+                                            }`}
+                                        onClick={() => toggleBlog(blog._id)}
+                                    ></i>
                                 </td>
                             </tr>
-                        )
-                    })
-                }
-            </tbody>
-        </table>
-
-
-    </div>
-);
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 };
 
 export default BlogManagement;

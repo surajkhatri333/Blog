@@ -1,70 +1,65 @@
-import axios from 'axios'
-import style from '../styles/MyBlog.module.css'
-import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import propTypes from 'prop-types'
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import propTypes from 'prop-types';
 
-export const MyBlogs = ({userEmail}) => {
-    const [data, setdata] = useState([]);
-    console.log(userEmail)
+export const MyBlogs = ({ userEmail }) => {
+    const [data, setData] = useState([]);
+    console.log(userEmail);
+
     useEffect(() => {
-        const fetchdata = async () => {
+        const fetchData = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/MyBlogs/${userEmail}`);
-                if(!response){
-                   alert("User is not login! sign in first");
+                if (!response) {
+                    alert("User is not logged in! Please sign in first.");
+                    return;
                 }
-                setdata(response.data);
-            }
-            catch (err) {
+                setData(response.data);
+            } catch (err) {
                 console.log(`error fetching data : ${err}`);
             }
         };
-        fetchdata();
-    }, [userEmail])
-
-
+        fetchData();
+    }, [userEmail]);
 
     return (
-        <>
-            <div className={style.MyBlogContainer}>
-                {
-                    data.map((blog) => {
-                        return (
-                            <>
-                                <div className={style.myBlog} key={blog._id}>
-                                    <div className={style.myBlogContent}>
-                                        <div className={style.myImage}>
-                                            <img src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image}`} alt="" width={"100%"} height={"100%"} />
-                                        </div>
-                                        <div className={style.detail}>
-                                            <div className={style.title}>Title : {blog.title}</div>
-                                            <div className={style.short_headline}>Short_description : {blog.short_headline}</div>
-                                            
-                                        </div>
-
-
-                                       
-                                    </div>
-                                    <div className={style.button}>
-                                        {/* <button className={style.edit}>EDIT</button>
-                                        <button className={style.delete}>DELETE</button> */}
-                                        <button className={style.view}><Link to={`/show/${blog._id}`}>VIEW</Link></button>
-                                    </div>
-                                </div>
-                            </>
-                        )
-
-
-                    })
-                }
+        <div className="max-w-6xl mx-auto px-4 mt-30">
+            {data.length === 0 && (
+                <p className="text-center text-gray-500 italic ">No blogs found.</p>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {data.map((blog) => (
+                    <div
+                        key={blog._id}
+                        className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
+                    >
+                        <div className="h-48 w-full overflow-hidden">
+                            <img
+                                src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image}`}
+                                alt={blog.title}
+                                className="object-contain w-full h-full"
+                            />
+                        </div>
+                        <div className="p-4 flex-grow">
+                            <h3 className="text-xl font-semibold mb-2 text-gray-800">Title: {blog.title}</h3>
+                            <p className="text-gray-600">Short Description: {blog.short_headline}</p>
+                        </div>
+                        <div className="p-4 border-t flex justify-end">
+                            <Link
+                                to={`/show/${blog._id}`}
+                                className="inline-block px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                            >
+                                View
+                            </Link>
+                        </div>
+                    </div>
+                ))}
             </div>
-        </>
-    )
-}
+        </div>
+    );
+};
 
 MyBlogs.propTypes = {
-    userEmail : propTypes.string.isRequired
-}
-
-
+    userEmail: propTypes.string.isRequired,
+};

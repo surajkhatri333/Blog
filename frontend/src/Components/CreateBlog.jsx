@@ -1,13 +1,10 @@
 import { useState } from 'react';
-import styles from '../styles/CreateBlog.module.css';
 import axios from 'axios';
-import propTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
-// eslint-disable-next-line react/prop-types
- const CreateBlog = ({userEmail,login}) => {
-    const  navigate = useNavigate();
-    const [field, setfield] = useState({
+const CreateBlog = ({ userEmail, login }) => {
+    const navigate = useNavigate();
+    const [field, setField] = useState({
         title: '',
         description: '',
         image: '',
@@ -16,91 +13,115 @@ import { useNavigate } from 'react-router-dom';
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-        setfield((prevField) => ({
+        setField((prevField) => ({
             ...prevField,
-            [name]: name === 'image' ? URL.createObjectURL(files[0]) : value
+            [name]: name === 'image' ? URL.createObjectURL(files[0]) : value,
         }));
     };
 
     const sendBlogToBackend = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        // formData.append('owner', userEmail);
         formData.append('image', document.querySelector('input[name="image"]').files[0]);
         formData.append('title', field.title);
         formData.append('short_headline', field.shortDes);
         formData.append('description', field.description);
 
         try {
-            // if(!login) window.alert("User is not login");
-            console.log(`${import.meta.env.VITE_APP_REQUEST_API}/api/users/${userEmail}`)
-            const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/users/${userEmail}`, formData,{ withCredentials: true});
+            const response = await axios.post(
+                `${import.meta.env.VITE_APP_REQUEST_API}/api/users/${userEmail}`,
+                formData,
+                { withCredentials: true }
+            );
             console.log('Blog data sent to backend', response);
-            console.log(`${import.meta.env.VITE_APP_REQUEST_API}/api/users/${userEmail}`)
-            navigate("/")
+            navigate('/');
         } catch (err) {
-            console.log('Cannot receivve blog data to backend', err);
-            console.log(`${import.meta.env.VITE_APP_REQUEST_API}/api/users/${userEmail}`)
+            console.log('Cannot send blog data to backend', err);
         }
     };
 
     return (
-        <div className={styles.container}>
-            <div className={styles.card}>
-                <h2 className={styles.title}>Create Your Blog</h2>
-                <form onSubmit={sendBlogToBackend}>
-                    <div className={styles.imageUpload}>
-                        <label htmlFor="image" className={styles.fileLabel}>
-                            {field.image ? <img src={field.image} alt="Preview" className={styles.imagePreview} /> : 'Upload an Image'}
+        <section className=" flex items-center justify-center  px-4 py-12">
+            <div className="w-full max-w-3xl bg-white shadow-2xl rounded-3xl p-10 animate-fade-in-up scale-y-70">
+                <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-8 p-5">✍️ Create a New Blog Post</h2>
+
+                <form onSubmit={sendBlogToBackend} className="space-y-6">
+                    {/* Image Upload */}
+                    <div className="w-full">
+                        <label
+                            htmlFor="image"
+                            className="flex items-center justify-center h-52 border-2 border-dashed border-gray-400 rounded-xl cursor-pointer hover:border-blue-500 transition duration-200 bg-gray-50"
+                        >
+                            {field.image ? (
+                                <img
+                                    src={field.image}
+                                    alt="Preview"
+                                    className="h-full w-full object-cover rounded-xl"
+                                />
+                            ) : (
+                                <span className="text-gray-500 font-medium">Click to Upload Blog Cover Image</span>
+                            )}
                         </label>
-                        <input type="file" name="image" accept="image/*" id="image" className={styles.fileInput} onChange={handleChange} />
+                        <input
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            id="image"
+                            className="hidden"
+                            onChange={handleChange}
+                        />
                     </div>
 
-                    <div className={styles.formGroup}>
+                    {/* Title Input */}
+                    <div>
                         <input
                             type="text"
                             name="title"
-                            placeholder="Blog Title"
+                            placeholder="Enter Blog Title"
                             value={field.title}
                             onChange={handleChange}
-                            className={styles.inputField}
+                            required
+                            className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
                     </div>
 
-                    <div className={styles.formGroup}>
+                    {/* Short Description */}
+                    <div>
                         <input
                             type="text"
                             name="shortDes"
-                            placeholder="Short Description"
+                            placeholder="Write a Short Headline (e.g., 10-15 words)"
                             value={field.shortDes}
                             onChange={handleChange}
-                            className={styles.inputField}
+                            required
+                            className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
                     </div>
 
-                    <div className={styles.formGroup}>
+                    {/* Description */}
+                    <div>
                         <textarea
                             name="description"
-                            placeholder="Write your blog here..."
+                            placeholder="Start writing your blog here..."
                             value={field.description}
                             onChange={handleChange}
-                            className={styles.textArea}
-                        />
+                            rows="6"
+                            required
+                            className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition resize-none"
+                        ></textarea>
                     </div>
 
-                    <button type="submit" className={styles.submitButton}>
-                        Submit Blog
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:opacity-90 transition duration-200 shadow-md"
+                    >
+                        🚀 Publish Blog
                     </button>
                 </form>
             </div>
-        </div>
+        </section>
     );
 };
 
-
 export default CreateBlog;
-
-CreateBlog.propTypes = {
-    userEmail : propTypes.string.isRequired
-}
-

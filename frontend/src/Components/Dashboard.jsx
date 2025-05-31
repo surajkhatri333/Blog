@@ -1,23 +1,17 @@
-// Dashboard.js
 import BlogStatistics from './BlogStatistics.jsx';
 import UserAnalytics from './UserAnalytics.jsx';
-import Notifications from './Notifications.jsx';
-import ContentOverview from './ContentOverview.jsx';
-import { useEffect } from 'react';
 
 const Dashboard = () => {
     return (
-        <div className="dashboard" style={{position:"absolute" ,top:"10%"}}>
-            <h1>Admin Dashboard</h1>
-            <div className="dashboard-section">
+        <div className="bg-gray-100 min-h-screen pt-20 px-4 md:px-12 mt-10">
+            <h1 className="text-2xl font-bold mb-10 text-center text-gray-800">📊 Admin Dashboard</h1>
+
+            <div className="flex flex-wrap md:flex-nowrap justify-center gap-10 mt-10">
                 <BlogStatistics />
                 <UserAnalytics />
-                <Notifications />
-                <ContentOverview />
             </div>
         </div>
     );
 };
-
 
 export default Dashboard;
