@@ -61,12 +61,12 @@ import { Link } from 'react-router-dom';
 
 export const Hero = () => {
   return (
-    <section className="relative sm:top-5  w-full  md:top-20  px-4 flex flex-col justify-between mb-30 ">
+    <section className="relative top-20  md:w-full  md:top-20  px-4 flex flex-col justify-between mb-30 ">
       <div className=' flex flex-col justify-around gap-10'>
         <div className="max-w-6xl min-h-min mx-auto grid md:grid-cols-1 items-center gap-12">
           {/* Left Content */}
           <div className=" p-6 flex flex-col gap-3">
-            <h1 className="h-15 text-5xl md:text-6xl font-extrabold text-indigo-800 leading-tight">
+            <h1 className="h-15 text-3xl md:text-3xl font-extrabold text-indigo-800 leading-tight">
               Unleash Your Words
             </h1>
             <p className="text-lg text-gray-700 max-w-md h-25">

@@ -10,7 +10,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { MyBlogs } from './Components/MyBlog.jsx'
 import { Login } from './Components/Login.jsx'
 import { Signup } from './Components/Signup.jsx'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Dashboard from './Components/Dashboard.jsx';
 import axios from 'axios'
 import './App.css';
@@ -22,6 +22,11 @@ import { UserManagement } from './Components/UserManagement.jsx';
 import CommentManagement from './Components/CommnetMangment.jsx';
 import ReportedContent from './Components/ReportedContent.jsx';
 import AdminLogin from './Components/AdminLogin.jsx'
+import UserProfile from './Components/UserProfile.jsx'
+import SavedBlog from './Components/SavedBlog.jsx'
+import UserDashboard from './Components/UserDashboard.jsx'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -29,14 +34,7 @@ function App() {
   const [email, setuserEmail] = useState('');
 
 
-  const handleLogin = (userEmail) => {
-    setisLogin(true);
-    setuserEmail(userEmail);
-  }
-
   const handleLogout = async () => {
-    // setisLogin(false);
-    // setuserEmail('');
 
     try {
       // const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/logout`, {}, { withCredentials: true })
@@ -44,48 +42,82 @@ function App() {
       setisLogin(false);
       setuserEmail(null); // Clear user email
       console.log("user logout successfully");
+      toast.success("Logout successful!");
+
     }
     catch (error) {
       console.error("Logout failed", error);
     }
   }
+  const handleLogin = useCallback((userEmail) => {
+    setisLogin(true);
+    setuserEmail(userEmail);
+  }, [setisLogin]);
+
+
+
+
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     const storedUser = JSON.parse(localStorage.getItem("BlogUser"));
+  //     if (storedUser && storedUser.token) {
+  //       try {
+  //         const res = await axios.get(
+  //           `${import.meta.env.VITE_APP_REQUEST_API}/check`,
+  //           { withCredentials: true }
+  //         );
+
+  //         if (res.data.isLogin) {
+  //           setuserEmail(storedUser.email);
+  //         } else {
+  //           localStorage.removeItem("BlogUser");
+  //           setisLogin(null);
+  //         }
+  //       } catch (err) {
+  //         console.error("Error verifying token", err);
+  //         localStorage.removeItem("BlogUser");
+  //         setisLogin(null);
+  //       }
+  //     } else {
+  //       setisLogin(null);
+  //     }
+  //   };
+
+  //   checkToken();
+  // }, [handleLogin]);
 
   useEffect(() => {
     const checkToken = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("BlogUser"));
-      if (storedUser && storedUser.token) {
-        try {
-          const res = await axios.get(
-            `${import.meta.env.VITE_APP_REQUEST_API}/check`,
-            { withCredentials: true }
-          );
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/check`,
+          { withCredentials: true }
+        );
 
-          if (res.data.isLogin) {
-            setuserEmail(storedUser.email);
-          } else {
-            localStorage.removeItem("BlogUser");
-            setisLogin(null);
+        if (res.data.isLogin) {
+          const storedUser = JSON.parse(localStorage.getItem("BlogUser"));
+          if (storedUser) {
+            handleLogin(storedUser.email);
           }
-        } catch (err) {
-          console.error("Error verifying token", err);
+        } else {
           localStorage.removeItem("BlogUser");
-          setisLogin(null);
+          handleLogin(null);
         }
-      } else {
-        setisLogin(null);
+      } catch (err) {
+        console.error("Token verification failed", err);
+        localStorage.removeItem("BlogUser");
+        handleLogin(null);
       }
     };
 
     checkToken();
-  }, [handleLogin]);
-
-
+  }, [setisLogin]);
 
   return (
     <>
 
       <BrowserRouter>
-        <Header isLogin={isLogin} handleLogin={handleLogin} onLogout={handleLogout} userEmail={email} />
+        <Header isLogin={isLogin} setisLogin={setisLogin} handleLogin={handleLogin} onLogout={handleLogout} userEmail={email} />
 
         <Routes>
           <Route path="/" element={
@@ -98,18 +130,21 @@ function App() {
 
           } />
           <Route path="/create" element={<CreateBlog userEmail={email} login={isLogin} />} />
-          <Route path="/show/:id" element={<ShowBlog />} />
+          <Route path="/show/:id" element={<ShowBlog isLogin={handleLogin} userEmail={email} />} />
           <Route path="/MyBlogs/:email" element={<MyBlogs userEmail={email} />} />
+          <Route path="/userDashboard" element={<UserDashboard userEmail={email} />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/savedBlog/:userEmail" element={<SavedBlog onLogin={handleLogin} />} />
           <Route path="/admin/login" element={<AdminLogin onLogin={handleLogin} />} />
           {/* <Route path="/login" element={<Logout onLogin={onLogout} />} /> */}
-          <Route path="/sign up" element={<Signup />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/blogs" element={<BlogManagement />} />
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/admin/comments" element={<CommentManagement />} />
           <Route path="/admin/reports" element={<ReportedContent />} />
+          <Route path="/userProfile/:userEmail" element={<UserProfile />} />
 
         </Routes>
 

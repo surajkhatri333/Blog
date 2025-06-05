@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Signup = () => {
     const [name, setname] = useState('');
@@ -18,8 +20,10 @@ export const Signup = () => {
             );
             console.log(response.data.message);
             navigate("/login");
+            toast.success("Signup successful! Please login.");
         } catch (err) {
             console.error("Error handling signup:", err);
+            toast.error("Signup failed. Please try again.");
         }
     };
 

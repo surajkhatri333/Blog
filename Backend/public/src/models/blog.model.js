@@ -33,8 +33,22 @@ const blogSchema = new mongoose.Schema(
             default : 0
         },
         comments: {
-            type: [String],
-            default : 0
+            type: [
+                {
+                    comment : {
+                        type : String,
+                    },
+                    user : {
+                        type : mongoose.Schema.Types.ObjectId,
+                        red : "User"
+                    },
+                    createdAt :{
+                        type : Date,
+                        default : Date.now
+                    }
+                }
+            ],
+            default : null
         },
        
         active: {

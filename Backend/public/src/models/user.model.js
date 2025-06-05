@@ -2,10 +2,10 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 // schema for use 
 
-const userSchema =  new mongoose.Schema({
-    profileAvatar : {
-        type :String,
-        require : true
+const userSchema = new mongoose.Schema({
+    profileAvatar: {
+        type: String,
+        require: true
     },
     username: {
         type: String,
@@ -20,19 +20,23 @@ const userSchema =  new mongoose.Schema({
         type: String,
         require: true
     },
-    isAdmin : {
-        type : Boolean,
-        default : "false"
+    isAdmin: {
+        type: Boolean,
+        default: "false"
     },
     totalBlogs: {
         type: Number,
-        default : 0
+        default: 0
+    },
+    savedBlogs: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Blog" }],
+        default: []
     },
     ban: {
         type: Boolean,
-        require : true
+        require: true
     }
-},{timestamps:true});
+}, { timestamps: true });
 
 
 
@@ -47,33 +51,33 @@ const userSchema =  new mongoose.Schema({
 //     return await bcrypt.compare(password, this.password);
 // };
 
-userSchema.methods.generateAccessToken = function(){
-    jwt.sign (
+userSchema.methods.generateAccessToken = function () {
+    jwt.sign(
         {
-        
+
             email: this.email,
-            username : this.username,
-          
+            username: this.username,
+
         },
         process.env.ACCESS_TOEKN_SECRET,
         {
-            expiresIn : process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
 
 
     )
 }
-userSchema.methods.generateRefreshToken = function(){
-    jwt.sign (
+userSchema.methods.generateRefreshToken = function () {
+    jwt.sign(
         {
-          
+
             email: this.email,
-            username : this.username,
-   
+            username: this.username,
+
         },
         process.env.REFRESH_TOEKN_SECRET,
         {
-            expiresIn : process.env.REFRESH_TOKEN_EXPIRY
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
 
 

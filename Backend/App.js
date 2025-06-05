@@ -14,7 +14,7 @@ app.use(cors(
     {
         origin: 'http://localhost:5173', // Your frontend's URL
         credentials: true, // Allow credentials (cookies, headers, etc.)
-      }
+    }
 ));
 app.use(express.json());
 app.use(express.static("public"));
@@ -32,16 +32,33 @@ import { Blog } from './public/src/models/blog.model.js'
 import { ApiResponse } from './public/src/utils/ApiResponse.js'
 import { verifyJwt } from './public/src/middleware/jwtVerify.middleware.js'
 import adminRouter from './public/src/routes/adminRoutes.router.js'
-import  blogStatisticRouter  from './public/src/routes/AdminDashboard/BlogStatistic.router.js'
+import blogStatisticRouter from './public/src/routes/AdminDashboard/BlogStatistic.router.js'
 
 
 
-app.use("/api/v1/user",userRouter);
+app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminRouter)
 
 // admin dashboard
-app.use("/api/v1/admin/dashbord/",Blog)
-
+app.use("/api/v1/admin/dashbord/", Blog)
+app.get("/admin/users",verifyJwt,async(req,res) => {
+    try {
+        const users = await User.find({});
+        return res.status(200).json({ message: "User data is send", users })
+    }
+    catch (err) {
+        return res.status(400).json({ message: "Server problem while catching user data " })
+    }
+})
+app.get("/admin/blogs",verifyJwt,async(req,res) => {
+    try {
+        const blogs = await Blog.find({});
+        return res.status(200).json({ message: "User data is send", blogs })
+    }
+    catch (err) {
+        return res.status(400).json({ message: "Server problem while catching user blogs " })
+    }
+})
 
 
 
@@ -55,11 +72,11 @@ app.use("/api/v1/admin/dashbord/",Blog)
 
 app.get('/test', (req, res) => {
     res.send('Test route working!');
-  });
+});
 
-app.get("/check",verifyJwt, (req, res) => {
+app.get("/check", verifyJwt, (req, res) => {
     // This route will only be reached if the token is valid
-    return res.status(200).json({ message : "token verified",isAdmin: req.user.isAdmin,isLogin:true}); // Send user details if needed
+    return res.status(200).json({ message: "token verified", isAdmin: req.user.isAdmin, isLogin: true }); // Send user details if needed
 });
 
 
@@ -86,11 +103,11 @@ app.post('/api/users', async (req, res) => {
     }
 });
 
-app.get("/", verifyJwt,async (req, res) => {
+app.get("/", async (req, res) => {
     try {
         const blogs = await Blog.find({});
         const users = await User.find({});
-        res.status(200).json({blogs,users});
+        res.status(200).json({ blogs, users });
     }
     catch (err) {
         console.log("Error in sending blog to frontend", err);
@@ -101,27 +118,27 @@ app.get("/", verifyJwt,async (req, res) => {
 app.get("/user", async (req, res) => {
     try {
         const users = await User.find();
-        return res.status(200).json({ message: "User data is send",users })
+        return res.status(200).json({ message: "User data is send", users })
     }
-    catch(err){
-        return res.status(400).json({message :"Server problem while catching user data "})
+    catch (err) {
+        return res.status(400).json({ message: "Server problem while catching user data " })
     }
-    
+
 })
 
 //for heaader
 app.get("/user/:email", async (req, res) => {
     try {
-        const userEmail  = req.params;
+        const userEmail = req.params;
         // console.log(userEmail)
         const users = await User.findOne(userEmail);
         // console.log(users)
-        return res.status(200).json({ message: "User data is send",users })
+        return res.status(200).json({ message: "User data is send", users })
     }
-    catch(err){
-        return res.status(400).json({message :"Server problem while catching user data "})
+    catch (err) {
+        return res.status(400).json({ message: "Server problem while catching user data " })
     }
-    
+
 })
 
 app.post("/api/users/:owner", upload.single("image"), async (req, res) => {
@@ -134,7 +151,7 @@ app.post("/api/users/:owner", upload.single("image"), async (req, res) => {
 
     try {
         const user = await User.findOne({ email: owner });
-        
+
         if (!user) {
             return res.status(400).json(new ApiError(400, "User is not register, Please sign up"));
         }
@@ -150,14 +167,14 @@ app.post("/api/users/:owner", upload.single("image"), async (req, res) => {
                 likescount: 0
 
             });
-            console.log(user)
-            if(!newBlog){
-                return res.status(500).json({message:"server error"})
-            }
-            
-             await User.updateOne({_id : user._id},{$set :{totalBlogs: user.totalBlogs+1}});
-            console.log(user)
-            await user.save();
+        console.log(user)
+        if (!newBlog) {
+            return res.status(500).json({ message: "server error" })
+        }
+
+        await User.updateOne({ _id: user._id }, { $set: { totalBlogs: user.totalBlogs + 1 } });
+        console.log(user)
+        await user.save();
         newBlog.save()
         return res.status(200).json(new ApiResponse(200, "Blog is created"));
     }
@@ -178,7 +195,6 @@ app.get("/MyBlogs/:owner", async (req, res) => {
         console.log(owner)
         const myblog = await Blog.find(owner);
         res.json(myblog);
-        console.log(myblog)
     }
     catch (err) {
         console.log(`error in sending my blog data to frontend :`, err.data);
@@ -222,28 +238,30 @@ app.put("/update/:id", async (req, res) => {
 
 //comments added
 app.post('/comments/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { comment } = req.body;
+    const blogId = req.params.id;
+    const { comment, userEmail } = req.body;
 
-        // Validate inputs
-        if (!comment) {
-            return res.status(400).send({ error: 'Comment cannot be empty' });
-        }
-
-        const blog = await Blog.findById(id);
-        if (!blog) {
-            return res.status(404).send({ error: 'Blog not found' });
-        }
-
-        blog.comments.push(comment);
-        await blog.save();
-
-        res.status(201).send({ newComment: comment });
-    } catch (error) {
-        console.error("Error saving comment:", error);
-        res.status(500).send({ error: 'Server error' });
+    const user = await User.findOne({ email: userEmail });
+    const userId = user._id;
+    const newComment = {
+        comment,
+        user: userId,
+        createdAt: new Date(),
+    };
+    const updatedBlog = await Blog.findByIdAndUpdate(
+        blogId,
+        { $push: { comments: newComment } },
+        { new: true }
+    );
+    const addedComment = {
+        comment: comment,
+        user: {
+            username: user.username,
+            email: user.email,
+        },
+        createdAt: newComment.createdAt
     }
+    return res.status(200).json({ newComments: addedComment });
 });
 
 
@@ -282,6 +300,45 @@ app.put("/likes/:id", verifyJwt, async (req, res) => {
     }
 
 })
+//save blog
+app.put("/save/:blogId", verifyJwt, async (req, res) => {
+    try {
+        const blogId = req.params.blogId;
+        const { userEmail } = req.body;
+        const user = await User.findOne({ email: userEmail });
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        // Prevent duplicates
+        if (user.savedBlogs.includes(blogId)) {
+            user.savedBlogs = user.savedBlogs.filter(id => id.toString() !== blogId);
+            await user.save();
+            return res.status(200).json({ savedBlogId : user.savedBlogs});
+        }
+        user.savedBlogs.push(blogId);
+        await user.save();
+        return res.status(200).json({ savedBlogId: user.savedBlogs });
+    }
+    catch (err) {
+        console.log("Error saving blog:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+})
+app.get("/savedBlogs/:userEmail", async (req, res) => {
+    const userEmail = req.params.userEmail;
+    try {
+        const user = await User.findOne({ email: userEmail });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        return res.status(200).json({ savedBlogs: user.savedBlogs });
+    }
+    catch (err) {
+        console.log("Error fetching saved blogs:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+});
 
 // user id
 app.get("/userid", verifyJwt, async (req, res) => {
@@ -301,7 +358,7 @@ app.use("/userAnalytics", async (req, res) => {
     const user = {
         totalUsers: await User.countDocuments(),
         newUsers: await User.find().sort({ createdAt: -1 }).limit(5),
-        totalBlogs : await Blog.countDocuments()
+        totalBlogs: await Blog.countDocuments()
     }
     res.status(200).json(user)
 

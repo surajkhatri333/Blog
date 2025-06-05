@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const UserAnalytics = () => {
+    const navigate = useNavigate();
     const [analytics, setAnalytics] = useState({
         newUsers: [],
         totalUsers: 0,
@@ -43,7 +45,8 @@ const UserAnalytics = () => {
                                             : '/default-avatar.png' 
                                     }
                                     alt="User Avatar"
-                                    className="w-10 h-10 rounded-full object-cover border"
+                                    className="w-10 h-10 rounded-full object-cover border hover:cursor-pointer"
+                                    onClick={() => navigate(`/userProfile/${user.email}`)}
                                 />
                                 <span className="text-gray-700">{user.email}</span>
                             </li>

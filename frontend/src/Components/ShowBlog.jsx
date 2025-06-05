@@ -1,13 +1,18 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export const ShowBlog = () => {
-    const [data, setData] = useState([]);
+export const ShowBlog = ({ isLogin, userEmail }) => {
+    const [data, setData] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [like, setLike] = useState(false);
+    const [save, setSave] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const handleEditing = () => setIsEditing(true);
 
@@ -25,18 +30,42 @@ export const ShowBlog = () => {
         setData((prev) => ({ ...prev, [name]: value }));
     };
 
+    // ✅ Unified fetching of blog + user + like status
     useEffect(() => {
-        const checkLikeStatus = async () => {
+        const fetchBlogAndUser = async () => {
             try {
-                const res = await axios.get("${import.meta.env.VITE_APP_REQUEST_API}/userid", { withCredentials: true });
-                const userId = res.data.user;
-                if (data.like?.includes(userId)) setLike(true);
+                const blogRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/show/${id}`);
+                const blogData = blogRes.data;
+
+                const userRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/userid`, { withCredentials: true });
+                const userId = userRes.data.user;
+
+                setData(blogData);
+                setLike(blogData.like?.includes(userId));
             } catch (err) {
-                console.log("Like status error:", err);
+                console.log("Fetch or Like status error:", err);
             }
         };
-        checkLikeStatus();
-    }, [data.like]);
+
+        fetchBlogAndUser();
+    }, [id, userEmail, setLike, setSave]);
+    useEffect(() => {
+        const checkIfSaved = async () => {
+            if (!userEmail || !isLogin) return;
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/savedBlogs/${userEmail}`);
+                if (res?.data?.savedBlogs?.includes(id)) {
+                    setSave(true);
+                } else {
+                    setSave(false);
+                }
+            } catch (err) {
+                console.error("Error checking saved status:", err);
+            }
+        };
+        checkIfSaved();
+    }, [userEmail, isLogin, id]);
+
 
     const handleStatus = useCallback(async () => {
         try {
@@ -45,7 +74,7 @@ export const ShowBlog = () => {
                 setLike((prev) => !prev);
                 setData((prevData) => ({
                     ...prevData,
-                    likesCount: like ? prevData.likesCount - 1 : prevData.likesCount + 1,
+                    likesCount: like ? Math.max(0, prevData.likesCount - 1) : prevData.likesCount + 1,
                 }));
             }
         } catch (err) {
@@ -58,18 +87,6 @@ export const ShowBlog = () => {
         if (heart) heart.style.color = like ? "red" : "black";
     }, [like]);
 
-    useEffect(() => {
-        const fetchBlog = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/show/${id}`);
-                setData(response.data);
-            } catch (err) {
-                console.log("Fetch blog error:", err);
-            }
-        };
-        fetchBlog();
-    }, [id]);
-
     const handleDelete = async () => {
         try {
             await axios.delete(`${import.meta.env.VITE_APP_REQUEST_API}/delete/${id}`, { withCredentials: true });
@@ -79,14 +96,39 @@ export const ShowBlog = () => {
         }
     };
 
+
+    const handleSave = async () => {
+        if (!isLogin) {
+            toast.info("Please Login to save Blog");
+            return;
+        }
+        try {
+            const response = await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/save/${id}`, { userEmail: userEmail }, { withCredentials: true });
+            const  savedBlogsId  = response.data.savedBlogId;
+            const isSaved = savedBlogsId.includes(id);
+            setSave(isSaved);
+            if (isSaved) {
+                toast.success("Blog saved successfully!", { icon: "💾" });
+            } else {
+                toast.info("Blog removed from saved list!");
+            }
+        }
+        catch (err) {
+            console.log("Save error :", err);
+            toast.info("Failed to save blog.Pleade try again Later");
+        }
+    }
+
+
     return (
         <div className="min-h-screen bg-white p-4 sm:p-8 mt-20">
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Blog content section */}
+                {/* Blog content */}
                 <div className="lg:col-span-2 shadow-md rounded-lg overflow-hidden border">
                     <div className="w-full h-60 sm:h-64 overflow-hidden">
                         <img src={`${import.meta.env.VITE_APP_REQUEST_API}/${data.image}`} alt="Blog" className="w-full h-full object-contain" />
                     </div>
+
 
                     <div className="p-4 sm:p-6">
                         {isEditing ? (
@@ -101,18 +143,34 @@ export const ShowBlog = () => {
                             </>
                         )}
 
-                        <div className="mt-4 flex items-center space-x-4">
+                        <div className="mt-4 flex justify-between items-center space-x-4">
                             <i
                                 className={`fa-regular fa-heart cursor-pointer transition-transform m-4 duration-300 ${like ? 'scale-125 text-red-500' : 'hover:scale-110'}`}
                                 onClick={handleStatus}
                             > {data.likesCount}</i>
+                            {
+                                save ?
+                                    (<i className="fa-solid fa-bookmark"
+                                        title='Unsave Blog'
+                                        onClick={handleSave}>
+                                    </i>)
+                                    :
+                                    (<i
+                                        className={"fa-regular fa-bookmark"}
+                                        title='Save Blog'
+                                        onClick={handleSave}
+                                    />)
+                            }
                         </div>
 
-                        <div className="mt-6 flex flex-wrap gap-3">
-                            <button onClick={handleEditing} className="bg-yellow-400 px-4 py-2 rounded">Edit</button>
-                            <button onClick={() => setShowConfirm(true)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
-                            <button onClick={handleChangeSave} className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-                        </div>
+                        {
+                            isLogin && userEmail === data.owner &&
+                            <div className="mt-6 flex flex-wrap gap-3">
+                                <button onClick={handleEditing} className="bg-yellow-400 px-4 py-2 rounded">Edit</button>
+                                <button onClick={() => setShowConfirm(true)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+                                <button onClick={handleChangeSave} className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+                            </div>
+                        }
 
                         <div className="border-t mt-6 pt-4">
                             {isEditing ? (
@@ -130,23 +188,37 @@ export const ShowBlog = () => {
                     </div>
                 </div>
 
-                {/* Comments Section */}
+                {/* Comments section */}
                 <div className="shadow-md border rounded-lg p-4">
+                    {/* Comment Form */}
                     <form
                         onSubmit={async (e) => {
                             e.preventDefault();
                             const commentInput = e.target.elements.comment;
                             const newComment = commentInput.value.trim();
-                            if (!newComment) return alert("Comment cannot be empty!");
+
+                            if (!newComment) {
+                                alert("Comment cannot be empty!");
+                                return;
+                            }
                             try {
-                                const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/comments/${id}`, { comment: newComment }, { withCredentials: true });
+                                const response = await axios.post(
+                                    `${import.meta.env.VITE_APP_REQUEST_API}/comments/${id}`,
+                                    { comment: newComment, userEmail: userEmail },
+                                    { withCredentials: true }
+                                );
+                                console.log("Comment response:", response.data);
+                                const newCommentObj = response.data.newComments;
+
                                 setData((prev) => ({
                                     ...prev,
-                                    comments: [...prev.comments, response.data.newComment],
+                                    comments: [...(prev.comments || {}), newCommentObj],
                                 }));
+
                                 commentInput.value = "";
                             } catch (err) {
-                                console.log("Comment error:", err);
+                                console.error("Comment error:", err);
+                                alert("Failed to post comment. Make sure you're logged in.");
                             }
                         }}
                     >
@@ -155,20 +227,29 @@ export const ShowBlog = () => {
                             placeholder="Add a public comment..."
                             className="w-full border p-2 rounded"
                         />
-                        <button type="submit" className="mt-2 w-full px-4 py-2 bg-blue-500 text-white rounded">
+                        <button
+                            type="submit"
+                            className="mt-2 w-full px-4 py-2 bg-blue-500 text-white rounded"
+                        >
                             Comment
                         </button>
                     </form>
 
+                    {/* Comment List */}
                     <div className="mt-6">
                         {data.comments?.length > 0 ? (
                             <ul className="space-y-4">
                                 {data.comments.map((comm, index) => (
                                     <li key={index} className="flex space-x-4">
-                                        <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+                                        <div className="w-10 h-10 rounded-full bg-gray-300 flex-shrink-0"></div>
                                         <div>
-                                            <div className="font-semibold">User {index + 1}</div>
-                                            <div>{comm}</div>
+                                            <div className="font-semibold" onClick={() => navigate(`/userProfile/${comm.user.email}`)}>
+                                                {comm.user?.username || comm.user?.email || `User ${index + 1}`}
+                                            </div>
+                                            <div className="text-sm text-gray-500">
+                                                {new Date(comm.createdAt).toLocaleString()}
+                                            </div>
+                                            <div className="mt-1">{comm.comment}</div>
                                         </div>
                                     </li>
                                 ))}
@@ -178,6 +259,7 @@ export const ShowBlog = () => {
                         )}
                     </div>
                 </div>
+
             </div>
 
             {showConfirm && (

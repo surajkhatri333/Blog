@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateBlog = ({ userEmail, login }) => {
     const navigate = useNavigate();
@@ -35,8 +37,11 @@ const CreateBlog = ({ userEmail, login }) => {
             );
             console.log('Blog data sent to backend', response);
             navigate('/');
+            toast.success("Blog  published successfully!");
+
         } catch (err) {
             console.log('Cannot send blog data to backend', err);
+            toast.error("Failed to publish blog. Please try again.");
         }
     };
 
