@@ -9,79 +9,33 @@ import cookieParser from "cookie-parser";
 
 
 export const userRegister = asyncHandler(async (req, res) => {
-    // try {
-    //     let { name, email, password, role } = req.body;
-    //     console.log(req.body);
-    //     if (!name || !email || !password) {
-    //         return res.status(400).json(new ApiError(400, "Please fill full details"));
-    //     }
-
-    //     const existedUser = role === "User"
-    //         ? await User.findOne({ email })
-    //         : await Admin.findOne({ email })
-
-    //     if (existedUser) {
-    //         return res.status(400).json(new ApiError(400, " User already exit"));
-    //     }
-    //     const hashedPassword = await bcrypt.hash(password, 8);
-
-    //     let user;
-    //     if (role == "User") {
-    //          user = await User.create({
-    //             username: name,
-    //             email,
-    //             password: hashedPassword,
-    //             role
-    //         });
-    //     }
-    //     else if (role == "Admin") {
-    //          user = await Admin.create({
-    //             username: name,
-    //             email,
-    //             password: hashedPassword,
-    //             role
-    //         });
-    //     }
-
-
-    //     const userCreated =  role === "User"
-    //     ? await User.findOne({ email })
-    //     : await Admin.findOne({ email });
-
-    //     if (!userCreated) {
-    //         return res.status(500).json(new ApiError(500, "Something went wrong while registering"));
-    //     }
-
-    //     console.log(userCreated)
-
-    //     return res.status(200).json(
-    //         new ApiResponse(200, user, "User suceessfully register")
-    //     )
-
-    // }
+    
     try {
         let { profileAvatar, name, email, password, role } = req.body;
-        // console.log(req.body)
+        console.log(req.body)
 
         if (!profileAvatar || !name || !email || !password) {
             return res.status(400).json(new ApiError(400, "Please fill all required details"));
         }
+        console.log("error 1")
 
         if (role !== "User" && role !== "Admin") {
             return res.status(400).json(new ApiError(400, "Invalid role specified"));
         }
+        console.log("error 2")
 
         const userExists = role === "User"
             ? await User.findOne({ email })
             : await Admin.findOne({ email });
 
-
+        console.log("error 3")
         if (userExists) {
             return res.status(400).json(new ApiError(400, `${role} with this email already exists`));
         }
+        console.log("error 3")
 
         const hashedPassword = await bcrypt.hash(password, 8);
-
+        console.log("error 4")
         let user;
         if (role === "User") {
             user = await User.create({
@@ -104,20 +58,20 @@ export const userRegister = asyncHandler(async (req, res) => {
         const userCreated = role === "User"
             ? await User.findOne({ email: user.email })
             : await Admin.findOne({ email: user.email });
-
+        console.log("error 5")
 
         if (!userCreated) {
             return res.status(500).json(new ApiError(500, "Something went wrong while registering"));
         }
 
         // console.log(userCreated);
-
+        console.log("error 6")
         return res.status(200).json(
             new ApiResponse(200, user, `${role} successfully registered`)
         );
     }
     catch (err) {
-        console.log("user can not register")
+        console.log("user can not register",err.message)
         return res.status(400).json({ message: "user not register" })
     }
 
