@@ -13,7 +13,8 @@ const app = express();
 
 app.use(cors(
     {
-        origin: 'http://localhost:5173', // Your frontend's URL
+        origin: 'https://68591fb55e51ac090a208891--luxury-semifreddo-6566ae.netlify.app', // Your frontend's URL
+         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true, // Allow credentials (cookies, headers, etc.)
     }
 ));
