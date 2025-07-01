@@ -107,7 +107,7 @@ export const userLogin = async (req, res) => {
 
         const token = jwt.sign(
             { id: userExist._id, isAdmin: userExist.isAdmin },
-            process.env.ACCESS_TOKEN_SECRET,
+            process.env.JWT_SECRET,
             { expiresIn: "1h" }
         );
         console.log("error 5")
