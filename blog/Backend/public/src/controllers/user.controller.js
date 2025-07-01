@@ -78,7 +78,7 @@ export const userRegister = asyncHandler(async (req, res) => {
 });
 
 
-export const userLogin = asyncHandler(async (req, res) => {
+export const userLogin = async (req, res) => {
     console.log("login request comes")
     try {
         const { email, password, isAdmin } = req.body;
@@ -124,7 +124,7 @@ export const userLogin = asyncHandler(async (req, res) => {
         console.error("Login failed:", err);
         return res.status(500).json(new ApiError(500, "Server error while logging in"));
     }
-});
+};
 
 
 
