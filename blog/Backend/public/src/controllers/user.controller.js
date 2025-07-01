@@ -115,7 +115,7 @@ export const userLogin = async (req, res) => {
             httpOnly: true,
             maxAge: 3600000,
             secure: true,
-            sameSite: "Lax",
+            sameSite: "None", // Use 'None' if your site is served over HTTPS
             path: "/"
         });
 
