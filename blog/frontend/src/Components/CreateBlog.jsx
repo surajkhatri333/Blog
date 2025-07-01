@@ -129,7 +129,7 @@ const CreateBlog = ({ userEmail }) => {
     );
 };
 CreateBlog.propTypes = {
-    userEmail: PropTypes.string.isRequired,
+    userEmail: PropTypes.string,
     login: PropTypes.func,
 };
 

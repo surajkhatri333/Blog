@@ -16,6 +16,7 @@ const Blogs = () => {
                     withCredentials: true,
                 });
                 const { blogs, users } = response.data;
+                console.log("Blogs and Users fetched successfully:", blogs, users);
 
                 const activeUsers = users.filter((user) => !user.ban);
                 const activeUserEmails = new Set(activeUsers.map((user) => user.email));
@@ -56,7 +57,7 @@ const Blogs = () => {
                         >
                             <div className="h-48 w-full overflow-hidden">
                                 <img
-                                    src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image}`}
+                                    src={blog.image}
                                     alt={blog.title}
                                     className="h-full w-full object-contain hover:scale-105 transition-transform duration-300"
                                 />

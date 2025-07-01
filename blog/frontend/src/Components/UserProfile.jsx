@@ -71,7 +71,7 @@ const UserProfile = () => {
                         {userBlogs && userBlogs.length > 0 && userBlogs.map((blog) => (
                             <div key={blog._id} className='bg-white rounded-2xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col overflow-hidden'>
                                 <div className='h-48 w-full overflow-hidden'>
-                                    <img src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image}`} alt={blog.title} className='h-full w-full object-contain hover:scale-105 transition-transform duration-300' />
+                                    <img src={blog.image} alt={blog.title} className='h-full w-full object-contain hover:scale-105 transition-transform duration-300' />
                                 </div>
                                 <div className='p-4 flex flex-col flex-grow'>
                                     <h2 className='text-xl font-semibold mb-2 text-gray-800'>{blog.title}</h2>

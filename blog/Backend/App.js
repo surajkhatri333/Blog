@@ -7,15 +7,16 @@ import bodyParser from 'body-parser'
 import { User } from './public/src/models/user.model.js'
 import { upload } from './public/src/middleware/multer.middleware.js'
 import cloudinary from './public/src/config/cloudinary/cloudinaryConfig.js'
+import fs from 'fs'
 
 
 const app = express();
 
 app.use(cors(
     {
-        // origin : "http://localhost:5173", // Your frontend's URL
+        // origin: "http://localhost:5173", // Your frontend's URL
         origin: 'https://luxury-semifreddo-6566ae.netlify.app', // Your frontend's URL
-         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true, // Allow credentials (cookies, headers, etc.)
     }
 ));
@@ -102,11 +103,11 @@ app.get("/", async (req, res) => {
     try {
         const blogs = await Blog.find({});
         const users = await User.find({});
-        res.status(200).json({ blogs, users });
+        return res.status(200).json({ blogs, users });
     }
     catch (err) {
         console.log("Error in sending blog to frontend", err);
-        res.status(400).json(new ApiError(400, "server error"));
+        return res.status(400).json(new ApiError(400, "server error"));
     }
 })
 
@@ -145,10 +146,13 @@ app.post("/api/users/:owner", upload.single("image"), async (req, res) => {
     console.log(req.file)
 
     try {
-        const folderPath = `Blogs/userBlog/${owner}`;
+        if (!req.file) {
+            return res.status(400).json({ message: "Image not provided" });
+        }
+        // const folderPath = `Blogs/userBlog/${owner}`;
 
         const result = await cloudinary.uploader.upload(req.file.path, {
-            folderPath
+             folder: `Blogs/userBlog/${owner}` 
         });
 
         fs.unlinkSync(req.file.path);
@@ -345,6 +349,7 @@ app.get("/savedBlogs/:userEmail", async (req, res) => {
 // user id
 app.get("/userid", verifyJwt, async (req, res) => {
     try {
+        console.log("User ID request received");
         return res.status(200).json({ user: req.user.id });
     }
     catch (err) {

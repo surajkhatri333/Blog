@@ -7,7 +7,7 @@ const BlogCard = ({ blog }) => {
             {/* Image Section */}
             <div className="h-60 overflow-hidden rounded-t-2xl flex items-center justify-center">
                 <img
-                    src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image}`}
+                    src={blog.image}
                     alt={blog.title}
                     className="w-60 h-60 object-cover hover:scale-80 transition-transform duration-300"
                 />

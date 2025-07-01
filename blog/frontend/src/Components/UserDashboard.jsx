@@ -112,7 +112,7 @@ const UserDashboard = ({ userEmail }) => {
                         <div className="space-y-3 max-h-[300px] overflow-y-auto">
                             {blogs.map(blog => (
                                 <Link to={`/show/${blog._id}`} key={blog._id} className="flex items-center gap-4 p-2 border-b hover:bg-gray-50 rounded">
-                                    <img src={`${import.meta.env.VITE_APP_REQUEST_API}/${blog.image}`} alt="blog" className="w-16 h-16 object-cover rounded" />
+                                    <img src={blog.image} alt="blog" className="w-16 h-16 object-cover rounded" />
                                     <div>
                                         <h4 className="font-medium text-blue-700">{blog.title}</h4>
                                         <p className="text-sm text-gray-500">{new Date(blog.createdAt).toLocaleDateString()}</p>

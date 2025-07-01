@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser";
 
 
 export const userRegister = asyncHandler(async (req, res) => {
-    
+
     try {
         let { profileAvatar, name, email, password, role } = req.body;
         console.log(req.body)
@@ -71,7 +71,7 @@ export const userRegister = asyncHandler(async (req, res) => {
         );
     }
     catch (err) {
-        console.log("user can not register",err.message)
+        console.log("user can not register", err.message)
         return res.status(400).json({ message: "user not register" })
     }
 
@@ -115,7 +115,10 @@ export const userLogin = async (req, res) => {
             httpOnly: true,
             maxAge: 3600000,
             secure: true,
-            sameSite: "None", // Use 'None' if your site is served over HTTPS
+            sameSite: "none",          // or "none" if secure is true during production
+            
+            // secure: false,            // true if using HTTPS for develpoment
+            // sameSite: "lax",          // or "none" if cross-site for development
             path: "/"
         });
 

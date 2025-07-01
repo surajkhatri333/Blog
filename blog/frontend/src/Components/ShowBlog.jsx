@@ -126,10 +126,8 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
                 {/* Blog content */}
                 <div className="lg:col-span-2 shadow-md rounded-lg overflow-hidden border">
                     <div className="w-full h-60 sm:h-64 overflow-hidden">
-                        <img src={`${import.meta.env.VITE_APP_REQUEST_API}/${data.image}`} alt="Blog" className="w-full h-full object-contain" />
+                        <img src={data.image} alt="Blog" className="w-full h-full object-contain" />
                     </div>
-
-
                     <div className="p-4 sm:p-6">
                         {isEditing ? (
                             <>
