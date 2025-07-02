@@ -129,8 +129,7 @@ const CreateBlog = ({ userEmail }) => {
     );
 };
 CreateBlog.propTypes = {
-    userEmail: PropTypes.string,
-    login: PropTypes.func,
+    userEmail: PropTypes.string
 };
 
 export default CreateBlog;

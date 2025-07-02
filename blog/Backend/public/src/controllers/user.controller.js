@@ -5,16 +5,17 @@ import { User } from '../models/user.model.js'
 import { Admin } from '../models/Admin.model.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import cloudinary from "../config/cloudinary/cloudinaryConfig.js";
 import cookieParser from "cookie-parser";
 
 
 export const userRegister = asyncHandler(async (req, res) => {
 
     try {
-        let { profileAvatar, name, email, password, role } = req.body;
+        let { name, email, password, role } = req.body;
+        const file = req.file;
         console.log(req.body)
-
-        if (!profileAvatar || !name || !email || !password) {
+        if (!file || !name || !email || !password) {
             return res.status(400).json(new ApiError(400, "Please fill all required details"));
         }
         console.log("error 1")
@@ -34,12 +35,15 @@ export const userRegister = asyncHandler(async (req, res) => {
         }
         console.log("error 3")
 
+        const cloudinaryUrl  = await cloudinary.uploader.upload(file.path, {
+            folder: `Blogs/userProfile`
+        });
         const hashedPassword = await bcrypt.hash(password, 8);
         console.log("error 4")
         let user;
         if (role === "User") {
             user = await User.create({
-                profileAvatar,
+                profileAvatar : cloudinaryUrl.secure_url,
                 username: name,
                 email,
                 password: hashedPassword,
@@ -47,7 +51,7 @@ export const userRegister = asyncHandler(async (req, res) => {
             });
         } else {
             user = await Admin.create({
-                profileAvatar,
+                profileAvatar : cloudinaryUrl.secure_url,
                 username: name,
                 email,
                 password: hashedPassword,
@@ -116,7 +120,6 @@ export const userLogin = async (req, res) => {
             maxAge: 3600000,
             secure: true,
             sameSite: "none",          // or "none" if secure is true during production
-            
             // secure: false,            // true if using HTTPS for develpoment
             // sameSite: "lax",          // or "none" if cross-site for development
             path: "/"

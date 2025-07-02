@@ -11,20 +11,20 @@ export const Signup = () => {
     const [profileAvatar, setprofileAvatar] = useState('');
     const navigate = useNavigate();
 
-    const handleSignup = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/register`,
-                { name, email, password, role: 'User', profileAvatar }
-            );
-            navigate("/login");
-            toast.success("Signup successful! Please login.");
-        } catch (err) {
-            console.error("Error handling signup:", err);
-            toast.error("Signup failed. Please try again.");
-        }
-    };
+    // const handleSignup = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const response = await axios.post(
+    //             `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/register`,
+    //             { name, email, password, role: 'User', profileAvatar }
+    //         );
+    //         navigate("/login");
+    //         toast.success("Signup successful! Please login.");
+    //     } catch (err) {
+    //         console.error("Error handling signup:", err);
+    //         toast.error("Signup failed. Please try again.");
+    //     }
+    // };
 
     const handleImage = (e) => {
         const image = e.target.files[0];
@@ -36,6 +36,30 @@ export const Signup = () => {
         }
     };
 
+
+    const handleSignup = async (e) => {
+        e.preventDefault();
+
+        const imageFile = document.getElementById('image').files[0];
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("role", "User");
+        formData.append("profileAvatar", imageFile); // actual image file
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/register`,
+                formData, { withcredentials: true }
+            );
+            toast.success("Signup successful! Please login.");
+            navigate("/login");
+        } catch (err) {
+            console.error("Error handling signup:", err);
+            toast.error("Signup failed. Please try again.");
+        }
+    };
     return (
         <form onSubmit={handleSignup} className="flex justify-center items-center min-h-screen bg-gray-100">
             <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">

@@ -7,6 +7,9 @@ const adminSchema = new Schema({
     required: true,
     unique: true,
   },
+  profileAvatar: {
+    type: String, 
+  },
   email: {
     type: String,
     required: true,

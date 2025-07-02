@@ -14,6 +14,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
     const fetchUserData = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`, { withCredentials: true });
+            console.log("User data response:", response);
             setUserData(response.data.users);
         } catch (error) {
             console.error("Failed to fetch user data", error);
@@ -78,7 +79,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
                         <>
                             {userData && (
                                 <img
-                                    src={`${import.meta.env.VITE_APP_REQUEST_API}/${userData.profileAvatar.replace('\\', '/')}`}
+                                    src={userData.profileAvatar} 
                                     alt="User Avatar"
                                     className="w-10 h-10 rounded-full border object-cover"
                                 />
@@ -139,7 +140,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
             {isLogin && userData && (
                 <div className="md:hidden absolute top-15 right-4">
                     <img
-                        src={`${import.meta.env.VITE_APP_REQUEST_API}/${userData.profileAvatar.replace('\\', '/')}`}
+                        src={userData.profileAvatar}
                         alt="User Avatar"
                         className="w-15 h-15 rounded-full object-cover border"
                     />
@@ -153,7 +154,7 @@ Header.propTypes = {
     isLogin: PropTypes.bool.isRequired,
     setisLogin: PropTypes.func.isRequired,
     onLogout: PropTypes.func.isRequired,
-    userEmail: PropTypes.string.isRequired,
+    userEmail: PropTypes.string,
 };
 
 export default Header;

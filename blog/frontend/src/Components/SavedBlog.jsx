@@ -77,7 +77,7 @@ const SavedBlog = ({ onLogin }) => {
     );
 };
 SavedBlog.propTypes = {
-    onLogin: PropTypes.bool.isRequired,
+    onLogin: PropTypes.func,
 };
 
 export default SavedBlog;

@@ -47,7 +47,6 @@ const AdminLogin = ({ onLogin }) => {
                     `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/check`,
                     { withCredentials: true }
                 );
-
                 if (res.data.isLogin) {
                     const storedUser = JSON.parse(localStorage.getItem("BlogUser"));
                     if (storedUser) {

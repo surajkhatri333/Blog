@@ -37,6 +37,7 @@ import { ApiResponse } from './public/src/utils/ApiResponse.js'
 import { verifyJwt } from './public/src/middleware/jwtVerify.middleware.js'
 import adminRouter from './public/src/routes/adminRoutes.router.js'
 import blogStatisticRouter from './public/src/routes/AdminDashboard/BlogStatistic.router.js'
+import { Admin } from './public/src/models/Admin.model.js'
 
 
 
@@ -127,7 +128,8 @@ app.get("/user/:email", async (req, res) => {
     try {
         const userEmail = req.params;
         // console.log(userEmail)
-        const users = await User.findOne(userEmail);
+        const users = await User.findOne(userEmail) || await Admin.findOne(userEmail);
+
         // console.log(users)
         return res.status(200).json({ message: "User data is send", users })
     }
@@ -152,7 +154,7 @@ app.post("/api/users/:owner", upload.single("image"), async (req, res) => {
         // const folderPath = `Blogs/userBlog/${owner}`;
 
         const result = await cloudinary.uploader.upload(req.file.path, {
-             folder: `Blogs/userBlog/${owner}` 
+            folder: `Blogs/userBlog/${owner}`
         });
 
         fs.unlinkSync(req.file.path);
@@ -372,6 +374,27 @@ app.use("/userAnalytics", async (req, res) => {
 })
 
 
+app.use("/api/v1/admin/blog/toggle/:blogId", async (req, res) => {
+    const { blogId } = req.params;
+
+    // 1. Find the blog
+    const blog = await Blog.findById(blogId);
+    if (!blog) {
+        return res.status(404).json({ message: "Blog not found" });
+    }
+
+    // 2. Toggle the 'active' field
+    blog.active = !blog.active;
+    await blog.save();
+
+    // 3. Respond with success
+    res.status(200).json({
+        success: true,
+        message: `Blog has been ${blog.active ? 'shown' : 'hidden'}`,
+        blogId: blog._id,
+        active: blog.active,
+    });
+});
 
 
 export { app };
