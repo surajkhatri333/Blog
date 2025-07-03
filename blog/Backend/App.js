@@ -14,7 +14,7 @@ const app = express();
 
 app.use(cors(
     {
-        origin: ["http://localhost:5173", 'https://luxury-semifreddo-6566ae.netlify.app'], 
+        origin: 'https://luxury-semifreddo-6566ae.netlify.app', 
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     }
 ));
