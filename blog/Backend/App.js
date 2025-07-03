@@ -16,7 +16,7 @@ app.use(cors(
     {
         origin: 'https://luxury-semifreddo-6566ae.netlify.app', 
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        credetentials: true, // Allow credentials (cookies, headers, etc.)
+        credentials: true, // Allow credentials (cookies, headers, etc.)
     }
 ));
 app.use(express.json());
