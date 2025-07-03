@@ -35,7 +35,7 @@ export const userRegister = asyncHandler(async (req, res) => {
         }
         console.log("error 3")
 
-        const cloudinaryUrl  = await cloudinary.uploader.upload(file.path, {
+        const cloudinaryUrl = await cloudinary.uploader.upload(file.path, {
             folder: `Blogs/userProfile`
         });
         const hashedPassword = await bcrypt.hash(password, 8);
@@ -43,7 +43,7 @@ export const userRegister = asyncHandler(async (req, res) => {
         let user;
         if (role === "User") {
             user = await User.create({
-                profileAvatar : cloudinaryUrl.secure_url,
+                profileAvatar: cloudinaryUrl.secure_url,
                 username: name,
                 email,
                 password: hashedPassword,
@@ -51,7 +51,7 @@ export const userRegister = asyncHandler(async (req, res) => {
             });
         } else {
             user = await Admin.create({
-                profileAvatar : cloudinaryUrl.secure_url,
+                profileAvatar: cloudinaryUrl.secure_url,
                 username: name,
                 email,
                 password: hashedPassword,
@@ -118,10 +118,8 @@ export const userLogin = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 3600000,
-            secure: true,
-            sameSite: "none",          // or "none" if secure is true during production
-            // secure: false,            // true if using HTTPS for develpoment
-            // sameSite: "lax",          // or "none" if cross-site for development
+            secure: process.env.NODE_ENV === "production",  // true only in production
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             path: "/"
         });
 
