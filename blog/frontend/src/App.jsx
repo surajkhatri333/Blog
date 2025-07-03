@@ -38,7 +38,7 @@ function App() {
   const handleLogout = async () => {
 
     try {
-      // const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/logout`, {}, { withCredentials: true })
+      const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/logout`, { withCredentials: true })
       localStorage.removeItem("BlogUser")
       setisLogin(false);
       setuserEmail(null); // Clear user email
