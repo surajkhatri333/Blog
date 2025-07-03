@@ -38,7 +38,12 @@ function App() {
   const handleLogout = async () => {
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/logout`, { withCredentials: true })
+      const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/logout`,{}, { withCredentials: true })
+      if(!response){
+        console.error("Logout failed: No response from server");
+        toast.error("Logout failed, please try again.");
+        return;
+      }
       localStorage.removeItem("BlogUser")
       setisLogin(false);
       setuserEmail(null); // Clear user email

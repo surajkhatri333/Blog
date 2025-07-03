@@ -139,7 +139,7 @@ export const userLogin = async (req, res) => {
 
 
 
-export const userLogout = asyncHandler(async (req, res) => {
+export const userLogout = async (req, res) => {
     try {
         // Clear the token cookie
         res.clearCookie("token", {
@@ -154,4 +154,4 @@ export const userLogout = asyncHandler(async (req, res) => {
         console.error("Logout failed:", err);
         return res.status(500).json(new ApiError(500, "Server error during logout"));
     }
-});
+};
