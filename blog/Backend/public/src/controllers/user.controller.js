@@ -115,6 +115,13 @@ export const userLogin = async (req, res) => {
             { expiresIn: "1h" }
         );
         console.log("error 5")
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+            path: "/"
+        });
+
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 3600000,

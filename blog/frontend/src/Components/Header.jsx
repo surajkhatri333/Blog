@@ -26,6 +26,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
             const checkAdminStatus = async () => {
                 try {
                     const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/check`, { withCredentials: true });
+                    console.log("Admin status response:", response);
                     setIsAdmin(response.data.user.isAdmin);
                 } catch (error) {
                     console.error("Admin check failed", error);
