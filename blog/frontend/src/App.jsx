@@ -38,8 +38,8 @@ function App() {
   const handleLogout = async () => {
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/logout`,{}, { withCredentials: true })
-      if(!response){
+      const response = await axios.post(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/logout`, {}, { withCredentials: true })
+      if (!response) {
         console.error("Logout failed: No response from server");
         toast.error("Logout failed, please try again.");
         return;
@@ -61,32 +61,33 @@ function App() {
   }, [setisLogin]);
 
 
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/check`,
-          { withCredentials: true }
-        );
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/check`,
+  //         { withCredentials: true }
+  //       );
 
-        if (res.data.isLogin) {
-          const storedUser = JSON.parse(localStorage.getItem("BlogUser"));
-          if (storedUser) {
-            handleLogin(storedUser.email);
-          }
-        } else {
-          localStorage.removeItem("BlogUser");
-          handleLogin(null);
-        }
-      } catch (err) {
-        console.error("Token verification failed", err);
-        localStorage.removeItem("BlogUser");
-        handleLogin(null);
-      }
-    };
+  //       if (res.data.isLogin) {
+  //         const storedUser = JSON.parse(localStorage.getItem("BlogUser"));
+  //         if (storedUser) {
+  //           handleLogin(storedUser.email);
+  //         }
+  //       } else {
+  //         localStorage.removeItem("BlogUser");
+  //         handleLogin(null);
+  //       }
+  //     } catch (err) {
+  //       console.error("Token verification failed", err);
+  //       localStorage.removeItem("BlogUser");
+  //       handleLogin(null);
+  //     }
+  //   };
 
-    checkToken();
-  }, [setisLogin]);
+  //   checkToken();
+  // }, [setisLogin]);
+  
 
   return (
     <>

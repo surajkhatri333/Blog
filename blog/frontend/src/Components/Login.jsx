@@ -4,7 +4,7 @@ import axios from 'axios';
 import propTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-toast("Welcome! to the  login",{autoClose:2000,draggable:true,pauseOnHover:true,theme:"light",hideProgressBar:false});
+toast("Welcome! to the  login", { autoClose: 2000, draggable: true, pauseOnHover: true, theme: "light", hideProgressBar: false });
 
 export const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');

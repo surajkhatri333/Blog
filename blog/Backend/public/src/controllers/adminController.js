@@ -33,8 +33,8 @@ export const adminLogin = asyncHandler(async (req, res) => {
     res.cookie("token", token, {
         httpOnly: true,
         maxAge: 3600000,
-        secure: false,
-        sameSite: "Lax",
+        secure: process.env.NODE_ENV === "production",  // true only in production
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
         path: "/",
     });
 
@@ -57,3 +57,5 @@ export const userLogout = asyncHandler(async (req, res) => {
 export const checkAdminAuth = asyncHandler(async (req, res) => {
     return res.status(200).json({ isLogin: true, user: req.user });
 });
+
+

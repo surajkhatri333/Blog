@@ -145,7 +145,7 @@ export const userLogout = async (req, res) => {
         res.clearCookie("token", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true in production
-            sameSite: "None",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             path: "/"
         });
 
@@ -155,3 +155,4 @@ export const userLogout = async (req, res) => {
         return res.status(500).json(new ApiError(500, "Server error during logout"));
     }
 };
+

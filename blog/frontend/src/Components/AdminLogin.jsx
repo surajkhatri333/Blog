@@ -40,29 +40,29 @@ const AdminLogin = ({ onLogin }) => {
         }
     }, [email, password, onLogin, navigate]);
 
-    useEffect(() => {
-        const checkToken = async () => {
-            try {
-                const res = await axios.get(
-                    `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/check`,
-                    { withCredentials: true }
-                );
-                if (res.data.isLogin) {
-                    const storedUser = JSON.parse(localStorage.getItem("BlogUser"));
-                    if (storedUser) {
-                        onLogin(storedUser.email);
-                    }
-                } else {
-                    localStorage.removeItem("BlogUser");
-                    onLogin(null);
-                }
-            } catch {
-                localStorage.removeItem("BlogUser");
-                onLogin(null);
-            }
-        };
-        checkToken();
-    }, [onLogin]);
+    // useEffect(() => {
+    //     const checkToken = async () => {
+    //         try {
+    //             const res = await axios.get(
+    //                 `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/check`,
+    //                 { withCredentials: true }
+    //             );
+    //             if (res.data.isLogin) {
+    //                 const storedUser = JSON.parse(localStorage.getItem("BlogUser"));
+    //                 if (storedUser) {
+    //                     onLogin(storedUser.email);
+    //                 }
+    //             } else {
+    //                 localStorage.removeItem("BlogUser");
+    //                 onLogin(null);
+    //             }
+    //         } catch {
+    //             localStorage.removeItem("BlogUser");
+    //             onLogin(null);
+    //         }
+    //     };
+    //     checkToken();
+    // }, [onLogin]);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

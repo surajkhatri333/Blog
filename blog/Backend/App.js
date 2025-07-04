@@ -71,7 +71,7 @@ app.get('/test', (req, res) => {
     res.send('Test route working!');
 });
 
-// app.get("/check", verifyJwt, (req, res) => {
+// app.use("/check", verifyJwt, (req, res) => {
 //     // This route will only be reached if the token is valid
 //     return res.status(200).json({ message: "token verified", isAdmin: req.user.isAdmin, isLogin: true }); // Send user details if needed
 // });
@@ -123,7 +123,7 @@ app.get("/user", async (req, res) => {
 
 })
 
-//for heaader
+//for header
 app.get("/user/:email", async (req, res) => {
     try {
         const userEmail = req.params;
