@@ -28,12 +28,12 @@ import SavedBlog from './Components/SavedBlog.jsx'
 import UserDashboard from './Components/UserDashboard.jsx'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import BlogSearch from './Components/SearchBlog.jsx'
 
 
 function App() {
   const [isLogin, setisLogin] = useState(false);
   const [email, setuserEmail] = useState('');
-
 
   const handleLogout = async () => {
 
@@ -55,10 +55,20 @@ function App() {
       console.error("Logout failed", error);
     }
   }
-  const handleLogin = useCallback((userEmail) => {
-    setisLogin(true);
-    setuserEmail(userEmail);
-  }, [setisLogin]);
+  useEffect(()=>{
+    handleLogin();
+  },[])
+
+  const handleLogin = () => {
+    const token = localStorage.getItem("BlogUser");
+    const cookie = document.cookie.split('; ').find(row => row.startsWith('token='));
+    console.log(cookie)
+    if (token) {
+      const parsedToken = JSON.parse(token);
+      setisLogin(true);
+      setuserEmail(parsedToken.email);
+    }
+  };
 
 
   // useEffect(() => {
@@ -105,6 +115,7 @@ function App() {
             </>
 
           } />
+          <Route path="/Blogs" element={<BlogSearch />} />
           <Route path="/create" element={<CreateBlog userEmail={email} login={isLogin} />} />
           <Route path="/show/:id" element={<ShowBlog isLogin={handleLogin} userEmail={email} />} />
           <Route path="/MyBlogs/:email" element={<MyBlogs userEmail={email} />} />

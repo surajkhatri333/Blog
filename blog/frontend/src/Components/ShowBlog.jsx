@@ -71,16 +71,17 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
         try {
             const response = await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/likes/${id}`, {}, { withCredentials: true });
             if (response.data) {
-                setLike((prev) => !prev);
+                setLike(response.data.liked);
                 setData((prevData) => ({
                     ...prevData,
-                    likesCount: like ? Math.max(0, prevData.likesCount - 1) : prevData.likesCount + 1,
+                    likesCount: response.data.likesCount,
                 }));
+
             }
         } catch (err) {
             console.log("Like status error:", err);
         }
-    }, [id, like]);
+    }, [id]);
 
     useEffect(() => {
         const heart = document.querySelector(".fa-heart");
@@ -104,7 +105,7 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
         }
         try {
             const response = await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/save/${id}`, { userEmail: userEmail }, { withCredentials: true });
-            const  savedBlogsId  = response.data.savedBlogId;
+            const savedBlogsId = response.data.savedBlogId;
             const isSaved = savedBlogsId.includes(id);
             setSave(isSaved);
             if (isSaved) {
@@ -128,6 +129,17 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
                     <div className="w-full h-60 sm:h-64 overflow-hidden">
                         <img src={data.image} alt="Blog" className="w-full h-full object-contain" />
                     </div>
+                    {/* <span className="relative float-right ">
+                        {
+                            new Date(data.createdAt).toLocaleString("en-US", {
+                                year: "numeric",
+                                day: "numeric",
+                                month: "short",
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            })
+                        }
+                    </span> */}
                     <div className="p-4 sm:p-6">
                         {isEditing ? (
                             <>
@@ -148,13 +160,13 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
                             > {data.likesCount}</i>
                             {
                                 save ?
-                                    (<i className="fa-solid fa-bookmark"
+                                    (<i className="fa-solid fa-bookmark hover:cursor-pointer"
                                         title='Unsave Blog'
                                         onClick={handleSave}>
                                     </i>)
                                     :
                                     (<i
-                                        className={"fa-regular fa-bookmark"}
+                                        className={"fa-regular fa-bookmark hover:cursor-pointer"}
                                         title='Save Blog'
                                         onClick={handleSave}
                                     />)
@@ -164,9 +176,10 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
                         {
                             isLogin && userEmail === data.owner &&
                             <div className="mt-6 flex flex-wrap gap-3">
-                                <button onClick={handleEditing} className="bg-yellow-400 px-4 py-2 rounded">Edit</button>
+                                {!isEditing ? <button onClick={handleEditing} className="bg-yellow-400 px-4 py-2 rounded">Edit</button> :
+                                    <button onClick={handleChangeSave} className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+                                }
                                 <button onClick={() => setShowConfirm(true)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
-                                <button onClick={handleChangeSave} className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
                             </div>
                         }
 
@@ -177,7 +190,7 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
                                     value={data.description}
                                     onChange={handleInputChange}
                                     rows={10}
-                                    className="w-full border p-4 rounded"
+                                    className="w-full border p-4 rounded text-justify"
                                 ></textarea>
                             ) : (
                                 <p className="whitespace-pre-wrap text-gray-700">{data.description}</p>

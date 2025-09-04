@@ -141,7 +141,7 @@ export const userLogin = async (req, res) => {
 
 export const userLogout = async (req, res) => {
     try {
-        // Clear the token cookie
+        // Clear the user cookie
         res.clearCookie("token", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true in production

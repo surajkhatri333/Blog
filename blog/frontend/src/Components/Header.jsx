@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -14,46 +14,31 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
     const fetchUserData = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`, { withCredentials: true });
-            console.log("User data response:", response);
+            // console.log("User data response:", response);
             setUserData(response.data.users);
         } catch (error) {
             console.error("Failed to fetch user data", error);
         }
     };
 
-    // useEffect(() => {
-    //     if (isLogin) {
-    //         const checkAdminStatus = async () => {
-    //             try {
-    //                 const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/check`, { withCredentials: true });
-    //                 console.log("Admin status response:", response);
-    //                 setIsAdmin(response.data.user.isAdmin);
-    //             } catch (error) {
-    //                 console.error("Admin check failed", error);
-    //                 setisLogin(false);
-    //             }
-    //         };
-    //         fetchUserData();
-    //         checkAdminStatus();
-    //     } else {
-    //         setIsAdmin(false);
-    //         setisLogin(false);
-    //     }
-    // }, [userEmail]);
     useEffect(() => {
         const token = localStorage.getItem("BlogUser");
-        if (token) {    
+        if (token) {
             const parsedToken = JSON.parse(token);
-            if(parsedToken.isAdmin){
+            if (parsedToken.isAdmin) {
                 setIsAdmin(true);
             }
             setisLogin(true);
             fetchUserData();
         }
-    }, [userEmail ]);
+        else {
+            setisLogin(false);
+        }
+    }, [userEmail]);
 
     const userHeader = [
         { name: "Home", path: "/" },
+        {name: "Blogs", path: "/Blogs"},
         { name: "Create Blog", path: "/create" },
         { name: "Saved Blog", path: `/savedBlog/${userEmail}` },
         { name: "Dashboard", path: "/userDashboard" },
@@ -69,23 +54,27 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
         <header className="w-full fixed top-0 bg-white shadow z-10">
             <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
                 {/* Logo */}
-                <Link to="/" className="text-2xl font-bold text-gray-800">YourBlog</Link>
+                <Link to="/" className="text-2xl font-bold text-gray-800 ">YourBlog</Link>
                 {
                     isAdmin ? (
                         <nav className="hidden md:flex items-center gap-6 text-gray-700 font-medium">
                             {adminHeader.map((item) => (
-                                <Link key={item.name} to={item.path} className="hover:text-blue-600">{item.name}</Link>
+                                <NavLink key={item.name} to={item.path} className="hover:text-blue-600">{item.name}</NavLink>
                             ))}
                         </nav>
                     ) : (
                         <nav className="hidden md:flex items-center gap-6 text-gray-700 font-medium">
                             {userHeader.map((item) => (
-                                <Link key={item.name} to={item.path} className="hover:text-blue-600">{item.name}</Link>
+                                <NavLink key={item.name} to={item.path}
+                                    className={({ isActive }) => {
+                                        return isActive ? 'text-blue-600 font-bold ' : '';
+                                    }}>
+                                    {item.name}
+                                </NavLink>
                             ))}
                         </nav>
                     )
                 }
-
                 {/* Auth & Avatar */}
                 <div className="hidden md:flex items-center gap-4">
                     {isLogin ? (

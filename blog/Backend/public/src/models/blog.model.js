@@ -4,62 +4,90 @@ import { User } from './user.model.js'
 const blogSchema = new mongoose.Schema(
     {
         owner: {
-            type: String,
-            require: true
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User", // link blog to actual user
+            required: true,
         },
         image: {
             type: String,
-            require: true
+            required: true,
         },
         title: {
             type: String,
-            require: true
+            required: true,
+            trim: true,
         },
         short_headline: {
             type: String,
-            require: true
+            required: true,
+            maxlength: 200, // limit short headline length
         },
         description: {
             type: String,
-            require: true
+            required: true,
         },
-        like: {
+
+        // ✅ New fields
+        category: {
+            type: String,
+            enum: ["Technology", "AI","Education","Travel","Law","Gaming", "Lifestyle", "Health", "Food", "Other"],
+            default: "Other",
+        },
+        tags: {
+            type: [String], // example: ["AI", "React", "Node"]
+            default: [],
+        },
+
+        // ✅ Likes
+        likes: {
             type: [mongoose.Schema.Types.ObjectId],
-             ref : "User",
-             default : []
+            ref: "User",
+            default: [],
         },
-        likesCount : {
-            type : Number,
-            default : 0
+        likesCount: {
+            type: Number,
+            default: 0,
         },
+
+        // ✅ Comments
         comments: {
             type: [
                 {
-                    comment : {
-                        type : String,
+                    comment: {
+                        type: String,
+                        required: true,
                     },
-                    user : {
-                        type : mongoose.Schema.Types.ObjectId,
-                        red : "User"
+                    user: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: "User",
+                        required: true,
                     },
-                    createdAt :{
-                        type : Date,
-                        default : Date.now
-                    }
-                }
+                    createdAt: {
+                        type: Date,
+                        default: Date.now,
+                    },
+                },
             ],
-            default : null
+            default: [],
         },
-       
+
+        // ✅ Meta
+        readingTime: {
+            type: String, // e.g., "5 min read"
+        },
+        status: {
+            type: String,
+            enum: ["Draft", "Published"],
+            default: "Published",
+        },
         active: {
             type: Boolean,
-            default : true
-        }
+            default: true,
+        },
     },
     {
-        timestamps: true
+        timestamps: true, // adds createdAt & updatedAt automatically
     }
-)
-
+);
 
 export const Blog = mongoose.model("Blog", blogSchema);

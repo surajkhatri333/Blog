@@ -1,26 +1,32 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import propTypes from 'prop-types';
 import BlogCard from './BlogCard';
 
 export const MyBlogs = ({ userEmail }) => {
     const [data, setData] = useState([]);
-    console.log(userEmail);
+
+    const userId = useRef(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/MyBlogs/${userEmail}`);
-                if (!response) {
-                    alert("User is not logged in! Please sign in first.");
-                    return;
+                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`, { withCredentials: true });
+                
+                userId.current = response.data.users._id;
+                if (userId.current) {
+                    const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/MyBlogs/${userId.current}`);
+                    if (!response) {
+                        alert("User is not logged in! Please sign in first.");
+                        return;
+                    }
+                    setData(response.data);
                 }
-                setData(response.data);
             } catch (err) {
                 console.log(`error fetching data : ${err}`);
             }
         };
-        fetchData();
+       fetchData();
     }, [userEmail]);
 
     return (

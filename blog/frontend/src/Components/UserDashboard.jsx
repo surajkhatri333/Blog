@@ -184,7 +184,7 @@
 
 
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import {
     BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -203,14 +203,21 @@ const UserDashboard = ({ userEmail }) => {
     const [savedBlogs, setSavedBlogs] = useState([]);
     const [savedBlogDetails, setSavedBlogDetails] = useState([]);
 
+    const userId = useRef(null);
+
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
+                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmailFromParams}`, { withCredentials: true });
+                userId.current = response.data.users._id;
+
                 const userRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmailFromParams}`);
                 setUser(userRes.data.users);
 
-                const blogsRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/MyBlogs/${userEmailFromParams}`);
-                setBlogs(blogsRes.data);
+                if (userId.current) {
+                    const blogsRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/MyBlogs/${userId.current}`);
+                    setBlogs(blogsRes.data);
+                }
 
                 const savedRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/savedBlogs/${userEmailFromParams}`);
                 setSavedBlogs(savedRes.data.savedBlogs);

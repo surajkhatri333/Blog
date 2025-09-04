@@ -14,8 +14,8 @@ const app = express();
 
 app.use(cors(
     {
-        // origin: 'http://localhost:5173', 
-        origin:'https://luxury-semifreddo-6566ae.netlify.app',// Your frontend's URL
+        origin: 'http://localhost:5173',
+        // origin:'https://luxury-semifreddo-6566ae.netlify.app',// Your frontend's URL
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true, // Allow credentials (cookies, headers, etc.)
     }
@@ -122,6 +122,16 @@ app.get("/user", async (req, res) => {
     }
 
 })
+app.get("/blogs", async (req, res) => {
+    try {
+        const blogs = await Blog.find();
+        return res.status(200).json({ message: "Blog data is sent", blogs })
+    }
+    catch (err) {
+        return res.status(400).json({ message: "Server problem while catching blog data " })
+    }
+
+})
 
 //for header
 app.get("/user/:email", async (req, res) => {
@@ -139,61 +149,126 @@ app.get("/user/:email", async (req, res) => {
 
 })
 
+
+//create blog
+// app.post("/api/users/:owner", upload.single("image"), async (req, res) => {
+//     const owner = req.params.owner;
+//     const { title, short_headline, description } = req.body;
+//     const { image } = req.file;
+//     console.log(owner)
+//     console.log(req.body)
+//     console.log(req.file)
+
+//     try {
+//         if (!req.file) {
+//             return res.status(400).json({ message: "Image not provided" });
+//         }
+//         // const folderPath = `Blogs/userBlog/${owner}`;
+
+//         const result = await cloudinary.uploader.upload(req.file.path, {
+//             folder: `Blogs/userBlog/${owner}`
+//         });
+
+//         fs.unlinkSync(req.file.path);
+//         const user = await User.findOne({ email: owner });
+
+//         if (!user) {
+//             return res.status(400).json(new ApiError(400, "User is not register, Please sign up"));
+//         }
+//         const newBlog = await Blog.create(
+//             {
+//                 owner,
+//                 image: result.secure_url,
+//                 title,
+//                 short_headline,
+//                 description,
+//                 like: [],
+//                 comments: [],
+//                 likescount: 0
+
+//             });
+//         console.log(user)
+//         if (!newBlog) {
+//             return res.status(500).json({ message: "server error" })
+//         }
+
+//         await User.updateOne({ _id: user._id }, { $set: { totalBlogs: user.totalBlogs + 1 } });
+//         console.log(user)
+//         await user.save();
+//         newBlog.save()
+//         return res.status(200).json(new ApiResponse(200, "Blog is created"));
+//     }
+
+//     catch (err) {
+//         console.log(err);
+//         console.log("frontend data is not received");
+//         return res.status(200).json(new ApiError(400, "Blog is not created created"));
+
+//     }
+// })
+
+const calculateReadingTime = (text) => {
+    const wordsPerMinute = 200; // avg adult reading speed
+    const words = text.split(" ").length;
+    const minutes = Math.ceil(words / wordsPerMinute);
+    return `${minutes} min read`;
+};
+
 app.post("/api/users/:owner", upload.single("image"), async (req, res) => {
-    const owner = req.params.owner;
-    const { title, short_headline, description } = req.body;
-    const { image } = req.file;
-    console.log(owner)
-    console.log(req.body)
-    console.log(req.file)
+    const ownerEmail = req.params.owner;
+    const { title, short_headline, description, category, tags, status } = req.body;
 
     try {
         if (!req.file) {
             return res.status(400).json({ message: "Image not provided" });
         }
-        // const folderPath = `Blogs/userBlog/${owner}`;
 
+        // ✅ Upload to Cloudinary
         const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: `Blogs/userBlog/${owner}`
+            folder: `Blogs/userBlog/${ownerEmail}`,
         });
 
+        // Remove file from server after upload
         fs.unlinkSync(req.file.path);
-        const user = await User.findOne({ email: owner });
 
+        // ✅ Find user
+        const user = await User.findOne({ email: ownerEmail });
         if (!user) {
-            return res.status(400).json(new ApiError(400, "User is not register, Please sign up"));
+            return res
+                .status(400)
+                .json(new ApiError(400, "User is not registered, Please sign up"));
         }
-        const newBlog = await Blog.create(
-            {
-                owner,
-                image: result.secure_url,
-                title,
-                short_headline,
-                description,
-                like: [],
-                comments: [],
-                likescount: 0
 
-            });
-        console.log(user)
+        // ✅ Create blog
+        const newBlog = await Blog.create({
+            owner: user._id, // store ObjectId instead of email
+            image: result.secure_url,
+            title,
+            short_headline,
+            description,
+            category: category || "Other",
+            tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
+            status: status || "Published",
+            readingTime: calculateReadingTime(description),
+        });
+
         if (!newBlog) {
-            return res.status(500).json({ message: "server error" })
+            return res.status(500).json(new ApiError(500, "Server error"));
         }
 
-        await User.updateOne({ _id: user._id }, { $set: { totalBlogs: user.totalBlogs + 1 } });
-        console.log(user)
+        // ✅ Update user's total blogs count
+        user.totalBlogs = (user.totalBlogs || 0) + 1;
         await user.save();
-        newBlog.save()
-        return res.status(200).json(new ApiResponse(200, "Blog is created"));
-    }
 
-    catch (err) {
-        console.log(err);
-        console.log("frontend data is not received");
-        return res.status(200).json(new ApiError(400, "Blog is not created created"));
-
+        return res
+            .status(201)
+            .json(new ApiResponse(201, "Blog created successfully", newBlog));
+    } catch (err) {
+        console.error("Error creating blog:", err);
+        return res.status(500).json(new ApiError(500, "Blog could not be created"));
     }
-})
+});
+
 
 
 
@@ -274,45 +349,82 @@ app.post('/comments/:id', async (req, res) => {
 
 
 //likes id
+// app.put("/likes/:id", verifyJwt, async (req, res) => {
+//     try {
+//         const blogId = req.params.id;
+//         console.log(blogId)
+//         const blog = await Blog.findById(blogId);
+//         if (!blog) {
+//             return res.status(400).json({ message: "blog is not find" });
+//         }
+
+//         //check user likes before
+//         const user = req.user.id;
+//         console.log(user)
+//         if (!blog.like.includes(user)) {
+//             blog.like.push(user);
+//             blog.likesCount += 1;
+//             // const updateblog = await Blog.findByIdAndUpdate(blogId,{$inc: {likesCount : 1}},{new:true});
+//             const updateblog = await blog.save();
+//             return res.json({ blog: updateblog });
+//         }
+//         else {
+//             blog.like.splice(user, 1);
+//             blog.likesCount -= 1;
+//             // const updateblog = await Blog.findByIdAndUpdate(blogId,{$inc: {likesCount : 1}},{new:true});
+//             const updatesblog = await blog.save();
+//             return res.json({ blog: updatesblog });
+//             // res.status(400).json({message:"user is already like this blog"});
+//         }
+//     }
+//     catch (err) {
+//         console.log("Blog is not update like field");
+//         return res.status(500).json({ message: "server error" });
+//     }
+
+// })
+
 app.put("/likes/:id", verifyJwt, async (req, res) => {
     try {
         const blogId = req.params.id;
-        console.log(blogId)
         const blog = await Blog.findById(blogId);
+
         if (!blog) {
-            return res.status(400).json({ message: "blog is not find" });
+            return res.status(404).json({ message: "Blog not found" });
         }
 
-        //check user likes before
-        const user = req.user.id;
-        console.log(user)
-        if (!blog.like.includes(user)) {
-            blog.like.push(user);
+        const userId = req.user.id; // from JWT
+
+        const alreadyLiked = blog.like.includes(userId);
+
+        if (!alreadyLiked) {
+            // Like
+            blog.like.push(userId);
             blog.likesCount += 1;
-            // const updateblog = await Blog.findByIdAndUpdate(blogId,{$inc: {likesCount : 1}},{new:true});
-            const updateblog = await blog.save();
-            return res.json({ blog: updateblog });
+        } else {
+            // Unlike (fix: remove by index)
+            blog.like = blog.like.filter((id) => id.toString() !== userId);
+            blog.likesCount = Math.max(0, blog.likesCount - 1);
         }
-        else {
-            blog.like.splice(user, 1);
-            blog.likesCount -= 1;
-            // const updateblog = await Blog.findByIdAndUpdate(blogId,{$inc: {likesCount : 1}},{new:true});
-            const updatesblog = await blog.save();
-            return res.json({ blog: updatesblog });
-            // res.status(400).json({message:"user is already like this blog"});
-        }
-    }
-    catch (err) {
-        console.log("Blog is not update like field");
-        return res.status(500).json({ message: "server error" });
-    }
 
-})
+        const updatedBlog = await blog.save();
+        return res.json({
+            blog: updatedBlog,
+            liked: !alreadyLiked,
+            likesCount: updatedBlog.likesCount,
+        });
+    } catch (err) {
+        console.error("Error updating likes:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+});
+
 //save blog
 app.put("/save/:blogId", verifyJwt, async (req, res) => {
     try {
         const blogId = req.params.blogId;
         const { userEmail } = req.body;
+        console.log("save blog email is: ", userEmail);
         const user = await User.findOne({ email: userEmail });
         if (!user) {
             return res.status(400).json({ message: "User not found" });

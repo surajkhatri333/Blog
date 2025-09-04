@@ -70,31 +70,39 @@ export const Login = ({ onLogin }) => {
   }, [onLogin]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 via-white to-green-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 via-white to-green-200 px-6 py-10">
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6 border"
+        className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6 border border-gray-200"
       >
-        <h2 className="text-3xl font-bold text-center text-gray-800">Login to YourBlog</h2>
+        {/* Title */}
+        <h2 className="text-3xl font-extrabold text-center text-gray-800 tracking-wide">
+          Welcome Back 👋
+        </h2>
+        <p className="text-center text-gray-500 text-sm">
+          Login to continue exploring YourBlog
+        </p>
 
+        {/* Email */}
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
+          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
+            Email Address
           </label>
           <input
-            type="text"
+            type="email"
             id="email"
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className=" mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
+            className="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition"
             placeholder="Enter your email"
             autoFocus
           />
         </div>
 
+        {/* Password */}
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1">
             Password
           </label>
           <input
@@ -103,21 +111,38 @@ export const Login = ({ onLogin }) => {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
+            className="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition"
             placeholder="Enter your password"
           />
         </div>
 
+        {/* Forgot password */}
+        <div className="flex justify-end">
+          <a href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800 transition">
+            Forgot password?
+          </a>
+        </div>
+
+        {/* Button */}
         <div>
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-200 w-full"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200"
           >
-            Submit
+            Login
           </button>
         </div>
+
+        {/* Signup link */}
+        <p className="text-center text-sm text-gray-600">
+          Don’t have an account?{" "}
+          <a href="/signup" className="text-blue-600 font-semibold hover:text-blue-800">
+            Sign up
+          </a>
+        </p>
       </form>
     </div>
+
   );
 };
 

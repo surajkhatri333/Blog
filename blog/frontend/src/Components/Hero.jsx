@@ -30,16 +30,6 @@ export const Hero = () => {
                 Create Blog
               </Link>
             </div>
-
-            {/* Search Input */}
-            <div className="bg-white mt-6 flex items-center rounded-full px-4 py-2 shadow-md max-w-md">
-              <input
-                type="text"
-                placeholder="Search blogs..."
-                className="flex-1 outline-none px-2 text-gray-800"
-              />
-              <FaSearch className="text-indigo-600" />
-            </div>
           </div>
 
           {/* Right Image */}
