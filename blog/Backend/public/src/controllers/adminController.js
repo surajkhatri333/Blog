@@ -55,7 +55,22 @@ export const userLogout = asyncHandler(async (req, res) => {
 
 // Check login status
 export const checkAdminAuth = asyncHandler(async (req, res) => {
-    return res.status(200).json({ isLogin: true, user: req.user });
+    const user = await Admin.findById(req.user.id);
+
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.isAdmin) {
+        return res.status(403).json({ message: "Forbidden: Not an admin" });
+    }
+
+    // ✅ User is an admin
+    return res.status(200).json({
+        isLogin: true,
+        isAdmin: true,
+        user,
+    });
 });
 
 

@@ -27,7 +27,7 @@ const BlogCard = ({ blog }) => {
             <div className="px-5 pb-4 flex justify-end">
                 <Link
                     to={`/show/${blog._id}`}
-                    className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg hover:from-blue-600 hover:to-indigo-600 transition"
+                    className="px-4 py-2 text-sm font-medium  bg-blue-500 text-white rounded-lg"
                 >
                     View Blog
                 </Link>

@@ -29,6 +29,9 @@ import UserDashboard from './Components/UserDashboard.jsx'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BlogSearch from './Components/SearchBlog.jsx'
+import Chatbot from './Components/Chatbot.jsx'
+import AboutUs from './Components/AboutUs.jsx'
+import TermsAndConditions from './Components/TermsCondition.jsx'
 
 
 function App() {
@@ -55,9 +58,9 @@ function App() {
       console.error("Logout failed", error);
     }
   }
-  useEffect(()=>{
+  useEffect(() => {
     handleLogin();
-  },[])
+  }, [])
 
   const handleLogin = () => {
     const token = localStorage.getItem("BlogUser");
@@ -97,7 +100,7 @@ function App() {
 
   //   checkToken();
   // }, [setisLogin]);
-  
+
 
   return (
     <>
@@ -111,6 +114,7 @@ function App() {
               <Hero />
               <Blogs />
               <CreateBlog />
+              <Chatbot />
               <Footer />
             </>
 
@@ -133,6 +137,8 @@ function App() {
           <Route path="/admin/reports" element={<ReportedContent />} />
           <Route path="/userProfile/:userEmail" element={<UserProfile />} />
 
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
         </Routes>
       </BrowserRouter>
 

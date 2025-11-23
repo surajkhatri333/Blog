@@ -259,7 +259,7 @@ const UserDashboard = ({ userEmail }) => {
                 {user && (
                     <div className="bg-white shadow-xl rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-6 border border-slate-200">
                         <div>
-                            <h2 className="text-2xl font-semibold mb-2">👤 {user.username}</h2>
+                            <h2 className="w-100 text-2xl font-semibold mb-2"><img src={user.profileAvatar} alt="Profile" className="w-15 h-15 inline rounded-full border border-orange-300" /> {user.username}</h2>
                             <p><strong>Email:</strong> {user.email}</p>
                             <p><strong>Joined:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
                         </div>
@@ -335,7 +335,7 @@ const UserDashboard = ({ userEmail }) => {
                 </div>
 
                 <div className="bg-white shadow-md rounded-2xl p-6 border border-slate-200">
-                    <h3 className="text-lg font-semibold mb-4 text-gray-700">📅 Recent Activity</h3>
+                    <h3 className="text-lg font-bold mb-4 text-green-700">Recent Activity</h3>
                     <ul className="divide-y max-h-80 overflow-y-auto">
                         {recentActivity.map((item, index) => (
                             <li key={index} className="py-3 flex justify-between">

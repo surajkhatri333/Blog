@@ -38,7 +38,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
 
     const userHeader = [
         { name: "Home", path: "/" },
-        {name: "Blogs", path: "/Blogs"},
+        { name: "Blogs", path: "/Blogs" },
         { name: "Create Blog", path: "/create" },
         { name: "Saved Blog", path: `/savedBlog/${userEmail}` },
         { name: "Dashboard", path: "/userDashboard" },
@@ -54,7 +54,13 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
         <header className="w-full fixed top-0 bg-white shadow z-10">
             <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
                 {/* Logo */}
-                <Link to="/" className="text-2xl font-bold text-gray-800 ">YourBlog</Link>
+                <Link to="/" className="text-2xl font-bold text-gray-800 ">
+                    <span className='text-green-500'>
+                        <Link to='/'>
+                            Sharekaro
+                        </Link>
+                    </span>
+                </Link>
                 {
                     isAdmin ? (
                         <nav className="hidden md:flex items-center gap-6 text-gray-700 font-medium">
@@ -83,7 +89,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
                                 <img
                                     src={userData.profileAvatar}
                                     alt="User Avatar"
-                                    className="w-10 h-10 rounded-full border object-cover"
+                                    className="w-10 h-10 rounded-full border border-orange-700"
                                 />
                             )}
                             <button
@@ -144,7 +150,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
                     <img
                         src={userData.profileAvatar}
                         alt="User Avatar"
-                        className="w-15 h-15 rounded-full object-cover border"
+                        className="w-15 h-15 rounded-full border border-orange-700"
                     />
                 </div>
             )}

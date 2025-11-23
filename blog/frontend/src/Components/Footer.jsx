@@ -24,19 +24,19 @@ const Footer = () => {
         {/* Contact Us */}
         <div>
           <h4 className="text-lg font-semibold mb-2">Contact Us</h4>
-          <p className="text-sm text-gray-300">Email: info@yourblog.com</p>
-          <p className="text-sm text-gray-300">Phone: +123 456 7890</p>
-          <p className="text-sm text-gray-300">Address: 123 Blog St, City, Country</p>
+          <p className="text-sm text-gray-300">Email: sharkaro@gmail.com</p>
+          <p className="text-sm text-gray-300">Phone: XXXXXXXXXX</p>
+          <p className="text-sm text-gray-300">Address: Uttarakhand,India</p>
         </div>
 
         {/* Social Links */}
         <div>
           <h4 className="text-lg font-semibold mb-2">Follow Us</h4>
           <div className="flex flex-col space-y-1 text-sm">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:underline text-gray-300">Facebook</a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:underline text-gray-300">Twitter</a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:underline text-gray-300">Instagram</a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:underline text-gray-300">LinkedIn</a>
+            <a href="https://facebook.com" target="_blank"  className="hover:underline text-gray-300">Facebook</a>
+            <a href="https://twitter.com" target="_blank" className="hover:underline text-gray-300">Twitter</a>
+            <a href="https://instagram.com" target="_blank"  className="hover:underline text-gray-300">Instagram</a>
+            <a href="https://linkedin.com" target="_blank"  className="hover:underline text-gray-300">LinkedIn</a>
           </div>
         </div>
       </div>

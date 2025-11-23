@@ -1,6 +1,6 @@
 import express from 'express'
 import mongoose, { trusted } from 'mongoose'
-import path from 'path'
+import path, { isAbsolute } from 'path'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -14,8 +14,10 @@ const app = express();
 
 app.use(cors(
     {
-        // origin: 'http://localhost:5173',
-        origin:'https://luxury-semifreddo-6566ae.netlify.app',// Your frontend's URL
+        origin: [
+            'http://localhost:5173',
+            'https://luxury-semifreddo-6566ae.netlify.app'
+        ],// Your frontend's URL
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true, // Allow credentials (cookies, headers, etc.)
     }
@@ -38,14 +40,18 @@ import { verifyJwt } from './public/src/middleware/jwtVerify.middleware.js'
 import adminRouter from './public/src/routes/adminRoutes.router.js'
 import blogStatisticRouter from './public/src/routes/AdminDashboard/BlogStatistic.router.js'
 import { Admin } from './public/src/models/Admin.model.js'
+import { isAdmin } from './public/src/middleware/isAdmin.middleware.js'
 
+//chatbot implementation
+import chatbotRoute from "./public/src/routes/chatbot.js";
+app.use("/api", chatbotRoute);
 
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminRouter)
 
 // admin dashboard
-app.use("/api/v1/admin/dashbord/", Blog)
+app.use("/api/v1/admin/dashbord/", verifyJwt, isAdmin, Blog)
 app.get("/admin/users", verifyJwt, async (req, res) => {
     try {
         const users = await User.find({});
@@ -395,6 +401,9 @@ app.put("/likes/:id", verifyJwt, async (req, res) => {
 
         const userId = req.user.id; // from JWT
 
+        blog.like = blog.like || blog.likes || [];
+        blog.likesCount = blog.likesCount || blog.like.length;
+        console.log("like count :" ,blog.likesCount);
         const alreadyLiked = blog.like.includes(userId);
 
         if (!alreadyLiked) {

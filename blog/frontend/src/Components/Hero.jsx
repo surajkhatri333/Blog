@@ -7,11 +7,11 @@ export const Hero = () => {
       <div className=' flex flex-col justify-around gap-10'>
         <div className="max-w-6xl min-h-min mx-auto grid md:grid-cols-1 items-center gap-12">
           {/* Left Content */}
-          <div className=" p-6 flex flex-col gap-3">
-            <h1 className="h-15 text-3xl md:text-3xl font-extrabold text-indigo-800 leading-tight">
+          <div className=" p-5 flex flex-col gap-3">
+            <h1 className="h-16 text-xl md:text-3xl font-extrabold text-indigo-800 leading-tight">
               Unleash Your Words
             </h1>
-            <p className="text-lg text-gray-700 max-w-md h-25">
+            <p className="text-md text-gray-700 max-w-md h-25">
               Welcome to your personal space for thoughts and stories. Connect, express, and inspire others with your blog.
             </p>
 

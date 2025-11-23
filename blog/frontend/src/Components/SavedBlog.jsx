@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import BlogCard from './BlogCard.jsx';
 import axios from 'axios';
+import NotFound from './NotFound.jsx';
+
 
 const SavedBlog = ({ onLogin }) => {
     const [userEmail, setUserEmail] = useState("");
     const [savedBlogsId, setSavedBlogsId] = useState([]);
     const [savedBlogs, setSavedBlogs] = useState([]);
+
 
     useEffect(() => {
         if (onLogin) {
@@ -17,6 +20,8 @@ const SavedBlog = ({ onLogin }) => {
         }
     }, [onLogin]);
 
+    
+    
     useEffect(() => {
         const fetchSavedBlogs = async () => {
             try {

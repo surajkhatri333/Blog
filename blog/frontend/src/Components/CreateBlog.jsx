@@ -212,7 +212,7 @@ const CreateBlog = ({ userEmail }) => {
         <section className="flex items-center justify-center px-6 py-12 mt-20 mb-20">
             <div className="w-full max-w-9xl relative top-10 bg-white shadow-xl rounded-2xl p-10">
                 <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-10 p-5">
-                    ✍️ Create a New Blog Post
+                     Create a New Blog Post
                 </h2>
 
                 <form onSubmit={sendBlogToBackend} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -309,9 +309,9 @@ const CreateBlog = ({ userEmail }) => {
                     <div className="lg:col-span-2 text-center">
                         <button
                             type="submit"
-                            className="w-50  py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:opacity-90 transition duration-200 shadow-md"
+                            className="w-50  py-3 bg-gradient-to-r bg-blue-500 text-white font-bold rounded-xl hover:opacity-90 transition duration-200 shadow-md"
                         >
-                            🚀 Publish Blog
+                             Publish Blog
                         </button>
                     </div>
                 </form>

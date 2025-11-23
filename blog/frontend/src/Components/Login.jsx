@@ -76,8 +76,8 @@ export const Login = ({ onLogin }) => {
         className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6 border border-gray-200"
       >
         {/* Title */}
-        <h2 className="text-3xl font-extrabold text-center text-gray-800 tracking-wide">
-          Welcome Back 👋
+        <h2 className="text-3xl font-extrabold text-center text-gray-800 tracking-widep p-3">
+          Welcome
         </h2>
         <p className="text-center text-gray-500 text-sm">
           Login to continue exploring YourBlog

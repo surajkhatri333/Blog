@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const ShowBlog = ({ isLogin, userEmail }) => {
+    const [currentUserId, setCurrentUserId] = useState(null);
+    
     const [data, setData] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [like, setLike] = useState(false);
@@ -13,6 +15,7 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
     const [showConfirm, setShowConfirm] = useState(false);
     const { id } = useParams();
     const navigate = useNavigate();
+   
 
     const handleEditing = () => setIsEditing(true);
 
@@ -30,25 +33,57 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
         setData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // ✅ Unified fetching of blog + user + like status
+    // Unified fetching of blog + user + like status
+    // useEffect(() => {
+    //     const fetchBlogAndUser = async () => {
+    //         try {
+    //             const blogRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/show/${id}`);
+    //             const blogData = blogRes.data;
+
+    //             const userRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/userid`, { withCredentials: true });
+    //             const userId = userRes.data.user;
+
+    //             setData(blogData);
+    //             setLike(blogData.like?.includes(userId));
+    //         } catch (err) {
+    //             console.error("Fetch or Like status error:", err);
+    //         }
+    //     };
+
+    //     fetchBlogAndUser();
+    // }, [id, userEmail, setLike, setSave]);
     useEffect(() => {
         const fetchBlogAndUser = async () => {
             try {
+                // Fetch blog always
                 const blogRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/show/${id}`);
                 const blogData = blogRes.data;
 
-                const userRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/userid`, { withCredentials: true });
-                const userId = userRes.data.user;
-
                 setData(blogData);
-                setLike(blogData.like?.includes(userId));
+
+                // If not logged in -> don't check like status
+                if (!isLogin) {
+                    setLike(false);
+                    return;
+                }
+
+                // Logged in -> check userId
+                const userRes = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/userid`, {
+                    withCredentials: true
+                });
+
+                const userId = userRes.data.user;
+                 setCurrentUserId(userId);
+                setLike(blogData.likes?.includes(userId));
             } catch (err) {
                 console.error("Fetch or Like status error:", err);
             }
         };
 
         fetchBlogAndUser();
-    }, [id, userEmail, setLike, setSave]);
+    }, [id, isLogin]);
+    console.log(data);
+
     useEffect(() => {
         const checkIfSaved = async () => {
             if (!userEmail || !isLogin) return;
@@ -75,6 +110,7 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
                 setData((prevData) => ({
                     ...prevData,
                     likesCount: response.data.likesCount,
+                    likes:response.data.likes
                 }));
 
             }
@@ -174,7 +210,7 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
                         </div>
 
                         {
-                            isLogin && userEmail === data.owner &&
+                            isLogin && currentUserId === data.owner &&
                             <div className="mt-6 flex flex-wrap gap-3">
                                 {!isEditing ? <button onClick={handleEditing} className="bg-yellow-400 px-4 py-2 rounded">Edit</button> :
                                     <button onClick={handleChangeSave} className="bg-green-500 text-white px-4 py-2 rounded">Save</button>

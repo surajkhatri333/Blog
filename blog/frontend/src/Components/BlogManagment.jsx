@@ -140,7 +140,7 @@ const BlogManagement = () => {
                     className="bg-white rounded-xl shadow-lg mb-6 transition-all duration-300"
                 >
                     <div
-                        className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white cursor-pointer rounded-t-xl"
+                        className="flex justify-between items-center px-6 py-4 bg-blue-500 text-white cursor-pointer rounded-t-xl"
                         onClick={() => toggleExpand(username)}
                     >
                         <div className="flex items-center gap-3 text-lg font-semibold">
