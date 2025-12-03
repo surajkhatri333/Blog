@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import BlogCard from './BlogCard.jsx';
 import axios from 'axios';
-import NotFound from './NotFound.jsx';
+import { useContext } from 'react';
+import { LoginContext } from '../Context/LoginContext.jsx';
 
 
-const SavedBlog = ({ onLogin }) => {
+const SavedBlog = () => {
+    const {isLogin:onLogin} = useContext(LoginContext);
     const [userEmail, setUserEmail] = useState("");
     const [savedBlogsId, setSavedBlogsId] = useState([]);
     const [savedBlogs, setSavedBlogs] = useState([]);

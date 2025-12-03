@@ -1,30 +1,15 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const Signup = () => {
     const [name, setname] = useState('');
-    const [email, setemail] = useState('');
+    const {email} = useParams();
     const [password, setpassword] = useState('');
     const [profileAvatar, setprofileAvatar] = useState('');
     const navigate = useNavigate();
-
-    // const handleSignup = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         const response = await axios.post(
-    //             `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/user/register`,
-    //             { name, email, password, role: 'User', profileAvatar }
-    //         );
-    //         navigate("/login");
-    //         toast.success("Signup successful! Please login.");
-    //     } catch (err) {
-    //         console.error("Error handling signup:", err);
-    //         toast.error("Signup failed. Please try again.");
-    //     }
-    // };
 
     const handleImage = (e) => {
         const image = e.target.files[0];
@@ -104,7 +89,7 @@ export const Signup = () => {
                         name="email"
                         placeholder="Email"
                         value={email}
-                        onChange={(e) => setemail(e.target.value)}
+                        readOnly
                         required
                         className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />

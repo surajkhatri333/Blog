@@ -7,4 +7,7 @@ export const userRouter = Router();
 
 userRouter.post("/register",upload.single("profileAvatar"),userRegister);
 userRouter.post("/login",userLogin);
-userRouter.post("/logout",userLogout)
+userRouter.post("/logout",userLogout);
+userRouter.get("/getcookie",verifyJwt,( req,res) => {
+    res.status(200).json({message : "Cookie is present"});
+});

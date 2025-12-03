@@ -1,12 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
-import propTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 toast("Welcome! to the  login", { autoClose: 2000, draggable: true, pauseOnHover: true, theme: "light", hideProgressBar: false });
 
-export const Login = ({ onLogin }) => {
+export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -35,41 +34,16 @@ export const Login = ({ onLogin }) => {
       };
 
       localStorage.setItem("BlogUser", JSON.stringify(userData));
-      onLogin(email);
+      // onLogin(email);
       navigate('/');
       toast.success("Login successful!");
     } catch (err) {
       console.log("Error handling login:", err);
       toast.error("Login failed. Please check your email and password.");
     }
-  }, [email, password, onLogin, navigate]);
+  }, [email, password, navigate]);
 
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_APP_REQUEST_API}/api/v1/admin/check`,
-          { withCredentials: true }
-        );
-
-        if (res.data.isLogin) {
-          const storedUser = JSON.parse(localStorage.getItem("BlogUser"));
-          if (storedUser) onLogin(storedUser.email);
-        } else {
-          localStorage.removeItem("BlogUser");
-          onLogin(null);
-        }
-      } catch (err) {
-        console.error("Token verification failed", err);
-        localStorage.removeItem("BlogUser");
-        onLogin(null);
-      }
-    };
-
-    checkToken();
-  }, [onLogin]);
-
-  return (
+return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 via-white to-green-200 px-6 py-10">
       <form
         onSubmit={handleLogin}
@@ -144,8 +118,4 @@ export const Login = ({ onLogin }) => {
     </div>
 
   );
-};
-
-Login.propTypes = {
-  onLogin: propTypes.func.isRequired,
 };

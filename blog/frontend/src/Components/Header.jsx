@@ -1,25 +1,16 @@
 import { Link, NavLink } from 'react-router-dom';
-import { useEffect, useState } from "react";
-import PropTypes from 'prop-types';
+import { useEffect, useState,useContext } from "react";
+import { LoginContext } from '../Context/LoginContext.jsx';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
+const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState("");
     const [isAdmin, setIsAdmin] = useState(false);
+    const {isLogin,setisLogin,userEmail,handleLogout} = useContext(LoginContext);
 
     const toggleMenu = () => setMenuOpen(!menuOpen);
-
-    const fetchUserData = async () => {
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`, { withCredentials: true });
-            // console.log("User data response:", response);
-            setUserData(response.data.users);
-        } catch (error) {
-            console.error("Failed to fetch user data", error);
-        }
-    };
 
     useEffect(() => {
         const token = localStorage.getItem("BlogUser");
@@ -29,12 +20,24 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
                 setIsAdmin(true);
             }
             setisLogin(true);
-            fetchUserData();
         }
         else {
             setisLogin(false);
         }
-    }, [userEmail]);
+    },[isLogin, setisLogin]);
+    useEffect ( () =>{
+        const fetchUserData = async () => {
+            try {
+                if(!userEmail) return;
+                const response = await axios.get(`${import.meta.env.VITE_APP_REQUEST_API}/user/${userEmail}`, { withCredentials: true });
+                console.log("User data response:", response);
+                setUserData(response.data.users);
+            } catch (error) {
+                console.error("Failed to fetch user data", error);
+            }
+        };
+        if(isLogin) fetchUserData();
+    },[isLogin, userEmail]);
 
     const userHeader = [
         { name: "Home", path: "/" },
@@ -93,7 +96,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
                                 />
                             )}
                             <button
-                                onClick={onLogout}
+                                onClick={handleLogout}
                                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
                             >
                                 Logout
@@ -102,7 +105,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
                     ) : (
                         <>
                             <Link to="/login" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">Login</Link>
-                            <Link to="/signup" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm">Sign Up</Link>
+                            <Link to="/sendOTP" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm">Sign Up</Link>
                         </>
                     )}
                 </div>
@@ -131,7 +134,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
                     <div className="pt-4 border-t border-gray-300 flex flex-col gap-2">
                         {isLogin ? (
                             <button
-                                onClick={onLogout}
+                                onClick={handleLogout}
                                 className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-md"
                             >
                                 Logout
@@ -139,7 +142,7 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
                         ) : (
                             <>
                                 <Link to="/login" className="bg-blue-500 text-center hover:bg-blue-600 text-white px-4 py-2 rounded-md">Login</Link>
-                                <Link to="/signup" className="bg-green-500 text-center hover:bg-green-600 text-white px-4 py-2 rounded-md">Sign Up</Link>
+                                <Link to="/sendOTP" className="bg-green-500 text-center hover:bg-green-600 text-white px-4 py-2 rounded-md">Sign Up</Link>
                             </>
                         )}
                     </div>
@@ -157,14 +160,6 @@ const Header = ({ isLogin, setisLogin, onLogout, userEmail }) => {
         </header>
     );
 };
-
-Header.propTypes = {
-    isLogin: PropTypes.bool.isRequired,
-    setisLogin: PropTypes.func.isRequired,
-    onLogout: PropTypes.func.isRequired,
-    userEmail: PropTypes.string,
-};
-
 export default Header;
 
 

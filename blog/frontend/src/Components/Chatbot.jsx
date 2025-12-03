@@ -38,12 +38,12 @@ function Chatbot() {
             {open && (
                 <div className="fixed bottom-24 right-6 w-80 h-96 bg-white/90 backdrop-blur-lg border border-gray-300 shadow-2xl rounded-xl flex flex-col animate-scaleUp">
                     {/* Header */}
-                    <div className="bg-green-600 text-white px-4 py-2 flex justify-between items-center rounded-t-xl">
+                    <div className="bg-green-400 text-white px-4 py-2 flex justify-between items-center rounded-t-xl">
                         <h3 className="font-semibold">Gemini Assistant</h3>
                         <button onClick={() => {
                             setOpen(false);
                             setMessages([]);
-                        }} className="text-lg">✖</button>
+                        }} className="text-lg">X</button>
                     </div>
 
                     {/* Messages */}

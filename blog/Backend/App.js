@@ -44,6 +44,7 @@ import { isAdmin } from './public/src/middleware/isAdmin.middleware.js'
 
 //chatbot implementation
 import chatbotRoute from "./public/src/routes/chatbot.js";
+import {otpRouter} from './public/src/routes/otp.router.js'
 app.use("/api", chatbotRoute);
 
 
@@ -71,7 +72,7 @@ app.get("/admin/blogs", verifyJwt, async (req, res) => {
     }
 })
 
-
+app.use("/api/v1/user", userRouter);
 
 app.get('/test', (req, res) => {
     res.send('Test route working!');
@@ -400,30 +401,30 @@ app.put("/likes/:id", verifyJwt, async (req, res) => {
         }
 
         const userId = req.user.id; // from JWT
+        console.log("userId : ",userId)
 
-        blog.like = blog.like || blog.likes || [];
-        blog.likesCount = blog.likesCount || blog.like.length;
-        console.log("like count :" ,blog.likesCount);
-        const alreadyLiked = blog.like.includes(userId);
-
+        blog.likes = blog.like  || blog.likes || [];
+        blog.likesCount = blog.likesCount || blog.likes.length;
+        const alreadyLiked = blog.likes.includes(userId);
         if (!alreadyLiked) {
             // Like
-            blog.like.push(userId);
+            blog.likes.push(userId);
             blog.likesCount += 1;
         } else {
             // Unlike (fix: remove by index)
-            blog.like = blog.like.filter((id) => id.toString() !== userId);
+            blog.likes = blog.likes.filter((id) => id.toString() != userId);
             blog.likesCount = Math.max(0, blog.likesCount - 1);
         }
 
         const updatedBlog = await blog.save();
+        console.log("updatedBlog : ", updatedBlog)
         return res.json({
             blog: updatedBlog,
             liked: !alreadyLiked,
             likesCount: updatedBlog.likesCount,
         });
     } catch (err) {
-        console.error("Error updating likes:", err);
+        console.error("Error updating likes:", err.message);
         return res.status(500).json({ message: "Server error" });
     }
 });
@@ -518,4 +519,6 @@ app.use("/api/v1/admin/blog/toggle/:blogId", async (req, res) => {
 });
 
 
+//OTP API
+app.use("/api/otp",otpRouter);
 export { app };

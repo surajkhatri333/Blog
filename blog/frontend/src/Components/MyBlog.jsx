@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
-import propTypes from 'prop-types';
+import { useEffect, useRef, useState ,useContext} from 'react';
 import BlogCard from './BlogCard';
+import { LoginContext } from '../Context/LoginContext';
 
-export const MyBlogs = ({ userEmail }) => {
+export const MyBlogs = () => {
+    const { userEmail } = useContext(LoginContext);
     const [data, setData] = useState([]);
 
     const userId = useRef(null);
@@ -35,19 +36,19 @@ export const MyBlogs = ({ userEmail }) => {
                 <p className="text-center text-gray-500 italic ">No blogs found.</p>
             )}
             <div className="relative top-20 min-h-screen grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
-                <div className='p-5'>
+                {/* <div className='p-5'> */}
                     {
                         data.map((blog) => (
                             <BlogCard key={blog._id} blog={blog} />
                         ))
                     }
-                </div>
+                {/* </div> */}
             </div>
 
         </>
     );
 };
 
-MyBlogs.propTypes = {
-    userEmail: propTypes.string.isRequired,
-};
+// MyBlogs.propTypes = {
+//     userEmail: propTypes.string.isRequired,
+// };

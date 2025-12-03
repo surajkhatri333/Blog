@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 const BlogCard = ({ blog }) => {
     return (
-        <div className=" bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 transition-all duration-300 max-w-sm mx-auto">
+        <div className="max-h-fit bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 transition-all duration-300 max-w-sm mx-auto">
             {/* Image Section */}
             <div className="h-60 overflow-hidden rounded-t-2xl flex items-center justify-center">
                 <img
                     src={blog.image}
                     alt={blog.title}
-                    className="w-60 h-60 object-cover hover:scale-80 transition-transform duration-300"
+                    className="w-100 h-60 object-contain hover:scale-80 transition-transform duration-300"
                 />
             </div>
 

@@ -41,9 +41,6 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="border-t border-gray-700 mt-10 pt-4 text-center text-sm text-gray-400">
-        <p>© 2024 Your Blog Name. All rights reserved.</p>
-      </div>
     </footer>
   );
 };

@@ -1,21 +1,22 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { LoginContext } from '../Context/LoginContext';
 
-export const ShowBlog = ({ isLogin, userEmail }) => {
+export const ShowBlog = () => {
+    const { isLogin, userEmail } = useContext(LoginContext);
     const [currentUserId, setCurrentUserId] = useState(null);
-    
     const [data, setData] = useState({});
     const [isEditing, setIsEditing] = useState(false);
-    const [like, setLike] = useState(false);
+    const [like, setLike] = useState("");
     const [save, setSave] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const { id } = useParams();
     const navigate = useNavigate();
-   
+
 
     const handleEditing = () => setIsEditing(true);
 
@@ -73,7 +74,7 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
                 });
 
                 const userId = userRes.data.user;
-                 setCurrentUserId(userId);
+                setCurrentUserId(userId);
                 setLike(blogData.likes?.includes(userId));
             } catch (err) {
                 console.error("Fetch or Like status error:", err);
@@ -104,18 +105,20 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
 
     const handleStatus = useCallback(async () => {
         try {
+            console.log("calling like update api");
             const response = await axios.put(`${import.meta.env.VITE_APP_REQUEST_API}/likes/${id}`, {}, { withCredentials: true });
+            console.log("calling successfully like api");
             if (response.data) {
                 setLike(response.data.liked);
                 setData((prevData) => ({
                     ...prevData,
                     likesCount: response.data.likesCount,
-                    likes:response.data.likes
+                    likes: response.data.likes
                 }));
 
             }
         } catch (err) {
-            console.log("Like status error:", err);
+            console.log("Like status error:", err.message);
         }
     }, [id]);
 
@@ -191,9 +194,12 @@ export const ShowBlog = ({ isLogin, userEmail }) => {
 
                         <div className="mt-4 flex justify-between items-center space-x-4">
                             <i
-                                className={`fa-regular fa-heart cursor-pointer transition-transform m-4 duration-300 ${like ? 'scale-125 text-red-500' : 'hover:scale-110'}`}
+                                className={`fa-heart cursor-pointer m-4 transition-transform duration-300 ${like ? 'fa-solid text-red-500 scale-125' : 'fa-regular hover:scale-110'}`}
                                 onClick={handleStatus}
-                            > {data.likesCount}</i>
+                            >
+                                {" "}{data.likesCount}
+                            </i>
+
                             {
                                 save ?
                                     (<i className="fa-solid fa-bookmark hover:cursor-pointer"
